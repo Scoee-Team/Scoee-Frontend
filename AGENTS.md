@@ -118,6 +118,14 @@ Use the following stack unless the existing project uses another stack.
 - flutter_secure_storage for token storage
 - Firebase Cloud Messaging for match/prediction notifications if needed
 
+Target platforms:
+
+- Android
+- iOS
+- Web
+
+Web should be developed primarily as a mobile web/PWA experience unless a desktop web layout is explicitly requested. Keep layouts responsive enough to avoid broken desktop rendering, but prioritize mobile viewport behavior, bottom navigation, touch targets, and compact vertical flows.
+
 Recommended structure:
 
 ```text
@@ -677,3 +685,32 @@ The frontend MVP is complete when:
 - Users cannot edit predictions after the deadline.
 - Users can view result, deviation, and selected loser.
 - UI follows the black premium design direction.
+
+## 16. Git Workflow
+
+- After completing work, check `git status` and `git diff --stat`.
+- After code changes, run lint, tests, or build when possible.
+- Only commit when the user explicitly says "커밋해줘" or "commit까지 해줘".
+- Always check the changed file list before committing.
+- Use Conventional Commits for commit messages.
+
+## 17. Commit Message Format
+
+Format:
+
+```text
+type(scope): summary
+```
+
+Examples:
+
+```text
+feat(auth): add kakao login flow
+fix(api): handle expired access token
+docs(readme): update setup guide
+```
+
+## 18. Safety
+
+- Never run `git push` without the user's explicit request.
+- Do not commit `.env`, API key, secret, or credential files.
