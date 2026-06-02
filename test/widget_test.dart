@@ -7,12 +7,12 @@ void main() {
   testWidgets('renders Scoee home screen', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: ScoeeApp()));
 
-    expect(find.text('Scoee'), findsWidgets);
-    expect(find.text('오늘의 경기'), findsOneWidget);
+    expect(find.text('The Loser'), findsOneWidget);
+    expect(find.text('오늘의 주요 경기'), findsOneWidget);
 
-    await tester.drag(find.text('오늘의 경기'), const Offset(0, -500));
+    await tester.drag(find.text('오늘의 주요 경기'), const Offset(0, -500));
     await tester.pumpAndSettle();
 
-    expect(find.text('진행 중인 예측방'), findsOneWidget);
+    expect(find.text('참여 중인 예측방'), findsOneWidget);
   });
 }
