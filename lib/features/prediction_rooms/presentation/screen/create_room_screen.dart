@@ -1,117 +1,219 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/figma_widgets.dart';
 
 class CreateRoomScreen extends StatelessWidget {
   const CreateRoomScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('예측방 만들기')),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+    return FigmaPage(
+      bottomNavIndex: 2,
+      child: Stack(
         children: [
-          TextField(
-            decoration: const InputDecoration(
-              labelText: '방 제목',
-              hintText: '오늘 한일전 스코어 예측',
+          const FigmaTopBar(title: '예측방 만들기', showBack: true),
+          AppScrollView(
+            topPadding: 88,
+            bottomPadding: 120,
+            children: [
+              const SmallMeta('ROOM TYPE'),
+              const SizedBox(height: 10),
+              const Text(
+                '친구들과 함께 예측할 경기를 선택하세요',
+                style: TextStyle(
+                  color: FigmaColors.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  height: 1.25,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const _RoomTextField(label: '방 제목', hint: '주말 프리미어리그 예측방'),
+              const SizedBox(height: 16),
+              const _TypeSelector(),
+              const SizedBox(height: 24),
+              const SectionTitle(title: '선택한 경기'),
+              const SizedBox(height: 14),
+              const _SelectedMatch(
+                title: 'Man City vs Arsenal',
+                meta: 'EPL 37R · 2024.05.19 00:30',
+              ),
+              SizedBox(height: 12),
+              const _SelectedMatch(
+                title: 'Liverpool vs Wolves',
+                meta: 'EPL 37R · 2024.05.18 23:00',
+              ),
+              SizedBox(height: 24),
+              const _DeadlinePanel(),
+            ],
+          ),
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: 96,
+            child: PrimaryCta(
+              label: '예측방 만들기',
+              icon: Icons.add_circle_outline_rounded,
+              onPressed: () => context.go('/rooms/10'),
             ),
           ),
-          const SizedBox(height: 16),
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(value: 'single', label: Text('단일 경기')),
-              ButtonSegment(value: 'multi', label: Text('여러 경기')),
-            ],
-            selected: const {'single'},
-            onSelectionChanged: (_) {},
-          ),
-          const SizedBox(height: 24),
-          const _SelectedMatchCard(title: 'Korea Republic vs Japan'),
-          const SizedBox(height: 12),
-          const _SelectedMatchCard(title: 'Qatar vs Ecuador'),
-          const SizedBox(height: 24),
-          const _DeadlineCard(),
-          const SizedBox(height: 28),
-          FilledButton(onPressed: () {}, child: const Text('만들기')),
         ],
       ),
     );
   }
 }
 
-class _SelectedMatchCard extends StatelessWidget {
-  const _SelectedMatchCard({required this.title});
+class _RoomTextField extends StatelessWidget {
+  const _RoomTextField({required this.label, required this.hint});
 
-  final String title;
+  final String label;
+  final String hint;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: ListTile(
-        title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: const Text('예측 마감: 경기 시작 전'),
-        trailing: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.close_rounded),
-          tooltip: '선택 해제',
+    return FigmaCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: TextField(
+        style: const TextStyle(color: FigmaColors.text),
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          border: InputBorder.none,
         ),
       ),
     );
   }
 }
 
-class _DeadlineCard extends StatelessWidget {
-  const _DeadlineCard();
+class _TypeSelector extends StatelessWidget {
+  const _TypeSelector();
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '예측 마감 방식',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 12),
-            const _DeadlineOption(selected: true, title: '경기 시작 전 자동 마감'),
-            const _DeadlineOption(selected: false, title: '모든 경기 같은 시간에 마감'),
-          ],
+    return Container(
+      height: 48,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: FigmaColors.cardAlt,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: _TypeChip(label: '단일 경기', selected: true)),
+          Expanded(child: _TypeChip(label: '여러 경기', selected: false)),
+        ],
+      ),
+    );
+  }
+}
+
+class _TypeChip extends StatelessWidget {
+  const _TypeChip({required this.label, required this.selected});
+
+  final String label;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: selected ? FigmaColors.blue : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: selected ? const Color(0xFF052A55) : FigmaColors.muted,
+          fontWeight: FontWeight.w800,
         ),
+      ),
+    );
+  }
+}
+
+class _SelectedMatch extends StatelessWidget {
+  const _SelectedMatch({required this.title, required this.meta});
+
+  final String title;
+  final String meta;
+
+  @override
+  Widget build(BuildContext context) {
+    return FigmaCard(
+      color: FigmaColors.cardAlt,
+      child: Row(
+        children: [
+          const TeamMark(label: 'EPL', size: 44, color: FigmaColors.green),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(color: FigmaColors.text, fontSize: 16),
+                ),
+                SmallMeta(meta),
+              ],
+            ),
+          ),
+          const Icon(Icons.close_rounded, color: FigmaColors.muted),
+        ],
+      ),
+    );
+  }
+}
+
+class _DeadlinePanel extends StatelessWidget {
+  const _DeadlinePanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return const FigmaCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '예측 마감 방식',
+            style: TextStyle(
+              color: FigmaColors.text,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          SizedBox(height: 16),
+          _DeadlineOption(label: '경기 시작 전 자동 마감', selected: true),
+          _DeadlineOption(label: '모든 경기 같은 시간에 마감', selected: false),
+        ],
       ),
     );
   }
 }
 
 class _DeadlineOption extends StatelessWidget {
-  const _DeadlineOption({required this.selected, required this.title});
+  const _DeadlineOption({required this.label, required this.selected});
 
+  final String label;
   final bool selected;
-  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Icon(
-        selected
-            ? Icons.radio_button_checked_rounded
-            : Icons.radio_button_off_rounded,
-        color: selected ? AppColors.accent : AppColors.secondaryText,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(
+            selected
+                ? Icons.radio_button_checked_rounded
+                : Icons.radio_button_off_rounded,
+            color: selected ? FigmaColors.blue : FigmaColors.muted,
+          ),
+          const SizedBox(width: 12),
+          Text(label, style: const TextStyle(color: FigmaColors.text)),
+        ],
       ),
-      title: Text(title),
-      onTap: () {},
     );
   }
 }
