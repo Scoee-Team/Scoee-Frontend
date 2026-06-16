@@ -10,7 +10,7 @@ class AppColors {
   static const primaryText = Color(0xFFFFFFFF);
   static const secondaryText = Color(0xFFA0A0A0);
   static const mutedText = Color(0xFF6E6E6E);
-  static const accent = Color(0xFF0A84FF);
+  static const accent = Color(0xFF47E266);
   static const success = Color(0xFF30D158);
   static const warning = Color(0xFFFFD60A);
   static const danger = Color(0xFFFF453A);

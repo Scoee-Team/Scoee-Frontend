@@ -1,4 +1,4 @@
-name: scoee_front
+name: scoee
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -38,6 +38,7 @@ dependencies:
   go_router: ^17.2.3
   dio: ^5.9.2
   intl: ^0.20.2
+  google_fonts: ^8.1.0
 
 dev_dependencies:
   flutter_test:

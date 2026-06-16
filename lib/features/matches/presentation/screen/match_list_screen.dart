@@ -12,9 +12,8 @@ class MatchListScreen extends StatelessWidget {
       bottomNavIndex: 1,
       child: Stack(
         children: [
-          const FigmaTopBar(title: 'The Loser'),
           AppScrollView(
-            topPadding: 80,
+            topPadding: 96,
             children: [
               const _DateScroller(),
               const SizedBox(height: 18),
@@ -26,9 +25,15 @@ class MatchListScreen extends StatelessWidget {
                     label: const Text('리그 선택'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: FigmaColors.text,
-                      side: const BorderSide(color: FigmaColors.border),
+                      side: BorderSide(
+                        color: FigmaColors.green.withValues(alpha: 0.32),
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(999),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -40,33 +45,33 @@ class MatchListScreen extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               _LeagueGroup(
-                title: 'Premier League',
+                title: '프리미어리그',
                 accent: FigmaColors.green,
                 children: [
                   _MatchCard(
                     time: '22:00',
-                    home: 'Arsenal',
-                    away: 'Liverpool',
-                    homeMark: 'ARS',
-                    awayMark: 'LIV',
+                    home: '아스널',
+                    away: '리버풀',
+                    homeMark: '아스',
+                    awayMark: '리버',
                     score: '2 - 1',
-                    status: 'LIVE',
+                    status: '진행중',
                     statusColor: FigmaColors.red,
-                    footer: '⚡  PREDICTION OPEN',
+                    footer: '예측 가능',
                     footerColor: FigmaColors.green,
                     onTap: () => context.go('/matches/1001'),
                   ),
                   const SizedBox(height: 12),
                   _MatchCard(
                     time: '00:30',
-                    home: 'Man City',
-                    away: 'Tottenham',
-                    homeMark: 'MC',
-                    awayMark: 'TOT',
+                    home: '맨시티',
+                    away: '토트넘',
+                    homeMark: '맨시',
+                    awayMark: '토트',
                     score: 'VS',
-                    status: 'NOT STARTED',
+                    status: '예정',
                     statusColor: FigmaColors.green,
-                    footer: '🔒  OPENS IN 2H',
+                    footer: '2시간 뒤 열림',
                     footerColor: FigmaColors.muted,
                     onTap: () => context.go('/matches/1002'),
                   ),
@@ -74,17 +79,17 @@ class MatchListScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               _LeagueGroup(
-                title: 'La Liga',
+                title: '라리가',
                 accent: FigmaColors.dim,
                 children: [
                   _MatchCard(
                     time: '04:00',
-                    home: 'Real Madrid',
-                    away: 'Barcelona',
-                    homeMark: 'RM',
-                    awayMark: 'BAR',
+                    home: '레알 마드리드',
+                    away: '바르셀로나',
+                    homeMark: '레알',
+                    awayMark: '바르',
                     score: '3 - 0',
-                    status: 'FT',
+                    status: '종료',
                     statusColor: FigmaColors.muted,
                     footer: null,
                     onTap: () => context.go('/matches/1003'),
@@ -92,6 +97,11 @@ class MatchListScreen extends StatelessWidget {
                 ],
               ),
             ],
+          ),
+          const FigmaTopBar(
+            title: '경기',
+            subtitle: '오늘의 경기 일정',
+            centerTitle: false,
           ),
         ],
       ),
@@ -105,12 +115,12 @@ class _DateScroller extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final days = [
-      ('OCT', '24', true),
-      ('FRI', '25', false),
-      ('SAT', '26', false),
-      ('SUN', '27', false),
-      ('MON', '28', false),
-      ('TUE', '29', false),
+      ('10월', '24', true),
+      ('금', '25', false),
+      ('토', '26', false),
+      ('일', '27', false),
+      ('월', '28', false),
+      ('화', '29', false),
     ];
 
     return SizedBox(
@@ -190,7 +200,7 @@ class _LeagueGroup extends StatelessWidget {
                     title,
                     style: const TextStyle(
                       color: FigmaColors.text,
-                      fontSize: 23,
+                      fontSize: 21,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -254,7 +264,7 @@ class _MatchCard extends StatelessWidget {
                 StatusPill(
                   label: status,
                   color: statusColor,
-                  filled: status == 'NOT STARTED',
+                  filled: status == '예정',
                 ),
               ],
             ),
@@ -269,7 +279,7 @@ class _MatchCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 108,
+                  width: 96,
                   child: ScoreText(score, size: score == 'VS' ? 32 : 46),
                 ),
                 Expanded(
@@ -318,7 +328,7 @@ class _TeamSide extends StatelessWidget {
           name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(color: FigmaColors.text, fontSize: 16),
+          style: const TextStyle(color: FigmaColors.text, fontSize: 14),
         ),
       ],
     );

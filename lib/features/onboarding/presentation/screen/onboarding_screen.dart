@@ -132,7 +132,7 @@ class _Header extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              'The Loser',
+              '오늘의 꼴찌',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: const Color(0xFFE3E2E7),
                 fontWeight: FontWeight.w800,
@@ -156,7 +156,7 @@ class _Header extends StatelessWidget {
                 child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 13, vertical: 5),
                   child: Text(
-                    'PREMIUM',
+                    '프리미엄',
                     style: TextStyle(
                       color: Color(0xFF8B91A0),
                       fontSize: 12,
@@ -428,15 +428,15 @@ class _BottomActions extends StatelessWidget {
                     child: FilledButton(
                       onPressed: () => context.go('/'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFF3E90FF),
-                        foregroundColor: const Color(0xFF002957),
+                        backgroundColor: const Color(0xFF47E266),
+                        foregroundColor: const Color(0xFF04190A),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         textStyle: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          height: 28 / 20,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          height: 1.15,
                         ),
                       ),
                       child: const Row(
@@ -459,7 +459,7 @@ class _BottomActions extends StatelessWidget {
                           child: TextButton(
                             onPressed: () => context.go('/'),
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF8B91A0),
+                              foregroundColor: const Color(0xFF47E266),
                               textStyle: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -478,7 +478,7 @@ class _BottomActions extends StatelessWidget {
                           child: TextButton(
                             onPressed: () => context.go('/'),
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF8B91A0),
+                              foregroundColor: const Color(0xFF47E266),
                               textStyle: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,

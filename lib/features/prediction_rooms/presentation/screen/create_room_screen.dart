@@ -12,12 +12,11 @@ class CreateRoomScreen extends StatelessWidget {
       bottomNavIndex: 2,
       child: Stack(
         children: [
-          const FigmaTopBar(title: '예측방 만들기', showBack: true),
           AppScrollView(
-            topPadding: 88,
-            bottomPadding: 120,
+            topPadding: 96,
+            bottomPadding: 100,
             children: [
-              const SmallMeta('ROOM TYPE'),
+              const SmallMeta('예측방 유형'),
               const SizedBox(height: 10),
               const Text(
                 '친구들과 함께 예측할 경기를 선택하세요',
@@ -36,13 +35,13 @@ class CreateRoomScreen extends StatelessWidget {
               const SectionTitle(title: '선택한 경기'),
               const SizedBox(height: 14),
               const _SelectedMatch(
-                title: 'Man City vs Arsenal',
-                meta: 'EPL 37R · 2024.05.19 00:30',
+                title: '맨시티 VS 아스널',
+                meta: '프리미어리그 37R · 2024.05.19 00:30',
               ),
               SizedBox(height: 12),
               const _SelectedMatch(
-                title: 'Liverpool vs Wolves',
-                meta: 'EPL 37R · 2024.05.18 23:00',
+                title: '리버풀 VS 울버햄튼',
+                meta: '프리미어리그 37R · 2024.05.18 23:00',
               ),
               SizedBox(height: 24),
               const _DeadlinePanel(),
@@ -51,12 +50,18 @@ class CreateRoomScreen extends StatelessWidget {
           Positioned(
             left: 20,
             right: 20,
-            bottom: 96,
+            bottom: 16,
             child: PrimaryCta(
               label: '예측방 만들기',
               icon: Icons.add_circle_outline_rounded,
               onPressed: () => context.go('/rooms/10'),
             ),
+          ),
+          const FigmaTopBar(
+            title: '예측방 만들기',
+            subtitle: '경기와 마감 방식을 선택하세요',
+            centerTitle: false,
+            showBack: true,
           ),
         ],
       ),
@@ -145,7 +150,7 @@ class _SelectedMatch extends StatelessWidget {
       color: FigmaColors.cardAlt,
       child: Row(
         children: [
-          const TeamMark(label: 'EPL', size: 44, color: FigmaColors.green),
+          const TeamMark(label: '프리', size: 44, color: FigmaColors.green),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

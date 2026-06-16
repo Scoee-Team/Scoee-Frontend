@@ -14,20 +14,8 @@ class RoomDetailScreen extends StatelessWidget {
       bottomNavIndex: 2,
       child: Stack(
         children: [
-          FigmaTopBar(
-            title: '주말 프리미어리그 예측방',
-            showBack: true,
-            trailing: const Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(Icons.info_outline_rounded, color: FigmaColors.blueSoft),
-                SizedBox(width: 8),
-                Icon(Icons.settings_outlined, color: FigmaColors.blueSoft),
-              ],
-            ),
-          ),
           AppScrollView(
-            topPadding: 84,
+            topPadding: 96,
             children: [
               Row(
                 children: const [
@@ -38,7 +26,7 @@ class RoomDetailScreen extends StatelessWidget {
                   Expanded(
                     child: _MiniStat(
                       label: '내 예측 상태',
-                      value: '▮▮▮ (2/5)',
+                      value: '2/5',
                       meta: '',
                       color: FigmaColors.pink,
                     ),
@@ -72,7 +60,6 @@ class RoomDetailScreen extends StatelessWidget {
                       child: PrimaryCta(
                         label: '예측 제출하기',
                         onPressed: () => context.go('/rooms/$roomId/predict'),
-                        color: FigmaColors.blueSoft,
                       ),
                     ),
                   ],
@@ -110,7 +97,7 @@ class RoomDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _PredictionTargetCard(
                 date: '2024.05.18 23:00',
-                league: 'EPL 37R',
+                league: '프리미어리그 37R',
                 home: '리버풀',
                 away: '울버햄튼',
                 score: '? : ?',
@@ -121,7 +108,7 @@ class RoomDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _PredictionTargetCard(
                 date: '2024.05.19 00:30',
-                league: 'EPL 37R',
+                league: '프리미어리그 37R',
                 home: '맨시티',
                 away: '아스널',
                 score: '3 : 1',
@@ -131,6 +118,20 @@ class RoomDetailScreen extends StatelessWidget {
                 onTap: () => context.go('/rooms/$roomId/predict'),
               ),
             ],
+          ),
+          FigmaTopBar(
+            title: '주말 프리미어리그 예측방',
+            subtitle: '참여자와 예측 진행 현황',
+            centerTitle: false,
+            showBack: true,
+            trailing: const Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(Icons.info_outline_rounded, color: FigmaColors.green),
+                SizedBox(width: 8),
+                Icon(Icons.settings_outlined, color: FigmaColors.green),
+              ],
+            ),
           ),
         ],
       ),
@@ -190,10 +191,10 @@ class _ParticipantStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const people = [
-      ('나', 'M', true),
-      ('김지훈', 'K', false),
-      ('박수민', 'P', true),
-      ('Lee J.', 'L', false),
+      ('나', '나', true),
+      ('김지훈', '김', false),
+      ('박수민', '박', true),
+      ('이지훈', '이', false),
     ];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -295,7 +296,7 @@ class _PredictionTargetCard extends StatelessWidget {
             label: button,
             icon: complete ? Icons.refresh_rounded : Icons.edit_note_rounded,
             onPressed: onTap,
-            color: complete ? const Color(0xFF303137) : FigmaColors.blueSoft,
+            color: complete ? const Color(0xFF303137) : FigmaColors.green,
           ),
         ],
       ),

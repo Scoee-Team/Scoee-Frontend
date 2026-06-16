@@ -12,46 +12,30 @@ class HomeScreen extends StatelessWidget {
       bottomNavIndex: 0,
       child: Stack(
         children: [
-          const FigmaTopBar(
-            title: 'The Loser',
-            subtitle: 'Good evening,',
-            centerTitle: false,
-            trailing: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Icon(
-                  Icons.notifications_none_rounded,
-                  color: FigmaColors.blueSoft,
-                ),
-                SizedBox(width: 14),
-                Icon(Icons.menu_rounded, color: FigmaColors.muted),
-              ],
-            ),
-          ),
           AppScrollView(
             topPadding: 96,
             children: [
               const Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'Welcome back,\n'),
+                    TextSpan(text: '다시 오셨네요,\n'),
                     TextSpan(
-                      text: 'Prediction Pro',
+                      text: '예측 고수님',
                       style: TextStyle(color: FigmaColors.blueSoft),
                     ),
                   ],
                 ),
                 style: TextStyle(
                   color: FigmaColors.text,
-                  fontSize: 24,
+                  fontSize: 23,
                   fontWeight: FontWeight.w900,
-                  height: 1.3,
+                  height: 1.28,
                 ),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 40),
               SectionTitle(
                 title: '오늘의 주요 경기',
-                action: '전체 보기 ›',
+                action: '전체 보기',
                 onAction: () => context.go('/matches'),
               ),
               const SizedBox(height: 14),
@@ -62,22 +46,22 @@ class HomeScreen extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     _HeroMatchCard(
-                      league: 'Premier League',
+                      league: '프리미어리그',
                       time: '21:30',
-                      home: 'Man City',
-                      away: 'Arsenal',
-                      homeMark: 'MC',
-                      awayMark: 'ARS',
+                      home: '맨시티',
+                      away: '아스널',
+                      homeMark: '맨시',
+                      awayMark: '아스',
                       onTap: () => context.go('/matches/1001'),
                     ),
                     const SizedBox(width: 16),
                     _HeroMatchCard(
-                      league: 'La Liga',
+                      league: '라리가',
                       time: '04:00',
-                      home: 'Real Madrid',
-                      away: 'Barcelona',
-                      homeMark: 'RM',
-                      awayMark: 'BAR',
+                      home: '레알',
+                      away: '바르사',
+                      homeMark: '레알',
+                      awayMark: '바르',
                       muted: true,
                       onTap: () => context.go('/matches/1002'),
                     ),
@@ -91,7 +75,7 @@ class HomeScreen extends StatelessWidget {
                 icon: Icons.groups_rounded,
                 title: '프리미어리그 28R 정복자',
                 meta: '예측 완료 · 현재 12위 / 50명',
-                badge: 'LIVE',
+                badge: '진행중',
                 color: FigmaColors.green,
                 onTap: () => context.go('/rooms/10'),
               ),
@@ -108,20 +92,35 @@ class HomeScreen extends StatelessWidget {
               const SectionTitle(title: '추천 경기'),
               const SizedBox(height: 14),
               const _RecommendedMatch(
-                title: 'Inter vs AC Milan',
-                meta: 'Serie A · 05:45',
-                first: 'INT',
-                second: 'AC',
+                title: '인터 밀란 VS AC 밀란',
+                meta: '세리에 A · 05:45',
+                first: '인터',
+                second: '밀란',
               ),
               SizedBox(height: 16),
               const _RecommendedMatch(
-                title: 'Bayern vs Dortmund',
-                meta: 'Bundesliga · Tomorrow 02:30',
-                first: 'BAY',
-                second: 'BVB',
+                title: '바이에른 VS 도르트문트',
+                meta: '분데스리가 · 내일 02:30',
+                first: '뮌헨',
+                second: '돌문',
                 saved: true,
               ),
             ],
+          ),
+          const FigmaTopBar(
+            title: 'Scoee',
+            centerTitle: false,
+            trailing: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.notifications_none_rounded,
+                  color: FigmaColors.blueSoft,
+                ),
+                SizedBox(width: 14),
+                Icon(Icons.menu_rounded, color: FigmaColors.muted),
+              ],
+            ),
           ),
         ],
       ),
@@ -155,13 +154,13 @@ class _HeroMatchCard extends StatelessWidget {
     return SizedBox(
       width: 280,
       child: FigmaCard(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(18),
         radius: 22,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SmallMeta('⚽  $league · $time'),
-            const SizedBox(height: 28),
+            SmallMeta('$league · $time'),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -185,7 +184,6 @@ class _HeroMatchCard extends StatelessWidget {
             PrimaryCta(
               label: muted ? '마감됨' : '예측하기',
               onPressed: muted ? null : onTap,
-              color: FigmaColors.blue,
             ),
           ],
         ),
@@ -219,7 +217,7 @@ class _TeamColumn extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: FigmaColors.text,
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.w700,
             ),
           ),

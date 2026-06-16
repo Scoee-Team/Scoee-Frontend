@@ -5,10 +5,10 @@ enum PredictionRoomStatus {
   completed;
 
   String get label => switch (this) {
-    PredictionRoomStatus.open => 'OPEN',
-    PredictionRoomStatus.partiallyLocked => 'PARTIALLY_LOCKED',
-    PredictionRoomStatus.locked => 'LOCKED',
-    PredictionRoomStatus.completed => 'COMPLETED',
+    PredictionRoomStatus.open => '진행중',
+    PredictionRoomStatus.partiallyLocked => '일부 마감',
+    PredictionRoomStatus.locked => '마감',
+    PredictionRoomStatus.completed => '완료',
   };
 }
 

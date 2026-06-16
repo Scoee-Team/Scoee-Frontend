@@ -1,18 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:scoee_front/main.dart';
+import 'package:scoee/main.dart';
 
 void main() {
-  testWidgets('renders Scoee home screen', (tester) async {
+  testWidgets('Scoee 홈 화면을 렌더링한다', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: ScoeeApp()));
-
-    expect(find.text('The Loser'), findsOneWidget);
-    expect(find.text('오늘의 주요 경기'), findsOneWidget);
-
-    await tester.drag(find.text('오늘의 주요 경기'), const Offset(0, -500));
     await tester.pumpAndSettle();
 
-    expect(find.text('참여 중인 예측방'), findsOneWidget);
+    expect(find.text('Scoee'), findsOneWidget);
+    expect(find.text('홈'), findsOneWidget);
+    expect(find.text('경기'), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
   });
 }

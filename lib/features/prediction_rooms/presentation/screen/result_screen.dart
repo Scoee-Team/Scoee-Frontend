@@ -13,9 +13,8 @@ class ResultScreen extends StatelessWidget {
       bottomNavIndex: 1,
       child: Stack(
         children: [
-          const FigmaTopBar(title: 'The Loser'),
           AppScrollView(
-            topPadding: 80,
+            topPadding: 96,
             children: const [
               _FinalScoreCard(),
               SizedBox(height: 56),
@@ -57,9 +56,13 @@ class ResultScreen extends StatelessWidget {
                 label: '결과 공유하기',
                 icon: Icons.share_outlined,
                 onPressed: null,
-                color: FigmaColors.blueSoft,
               ),
             ],
+          ),
+          const FigmaTopBar(
+            title: '결과 확인',
+            subtitle: '편차와 꼴찌 결과',
+            centerTitle: false,
           ),
         ],
       ),
@@ -79,13 +82,9 @@ class _FinalScoreCard extends StatelessWidget {
         children: [
           Row(
             children: const [
-              StatusPill(
-                label: 'PREMIER LEAGUE',
-                color: FigmaColors.dim,
-                filled: true,
-              ),
+              StatusPill(label: '프리미어리그', color: FigmaColors.dim, filled: true),
               Spacer(),
-              StatusPill(label: '● FULL TIME', color: FigmaColors.pink),
+              StatusPill(label: '경기 종료', color: FigmaColors.pink),
             ],
           ),
           const SizedBox(height: 22),
@@ -93,16 +92,16 @@ class _FinalScoreCard extends StatelessWidget {
             children: const [
               Expanded(
                 child: _ResultTeam(
-                  mark: 'LIV',
-                  name: 'Liverpool',
+                  mark: '리버',
+                  name: '리버풀',
                   color: FigmaColors.red,
                 ),
               ),
               ScoreText('4:1', size: 48),
               Expanded(
                 child: _ResultTeam(
-                  mark: 'CHE',
-                  name: 'Chelsea',
+                  mark: '첼시',
+                  name: '첼시',
                   color: FigmaColors.blue,
                 ),
               ),
@@ -255,7 +254,7 @@ class _ResultRow extends StatelessWidget {
               ),
               if (best || loser)
                 Text(
-                  best ? 'Best Pick' : '오늘의 꼴찌',
+                  best ? '최고 예측' : '오늘의 꼴찌',
                   style: TextStyle(color: color, fontSize: 12),
                 ),
             ],

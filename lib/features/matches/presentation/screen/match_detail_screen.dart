@@ -14,20 +14,9 @@ class MatchDetailScreen extends StatelessWidget {
       bottomNavIndex: 1,
       child: Stack(
         children: [
-          FigmaTopBar(
-            title: 'Man City vs Arsenal',
-            showBack: true,
-            trailing: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.share_outlined,
-                color: FigmaColors.blueSoft,
-              ),
-            ),
-          ),
           AppScrollView(
-            topPadding: 64,
-            bottomPadding: 124,
+            topPadding: 80,
+            bottomPadding: 92,
             children: [
               const _HeroMatchDetail(),
               const SizedBox(height: 24),
@@ -35,9 +24,9 @@ class MatchDetailScreen extends StatelessWidget {
                 children: const [
                   Expanded(
                     child: _StatCard(
-                      label: 'League Position',
-                      value: '1st',
-                      meta: 'vs 2nd',
+                      label: '리그 순위',
+                      value: '1위',
+                      meta: '2위 상대',
                       color: FigmaColors.green,
                     ),
                   ),
@@ -49,34 +38,44 @@ class MatchDetailScreen extends StatelessWidget {
               const _ProbabilityCard(),
               const SizedBox(height: 30),
               SectionTitle(
-                title: 'Active Prediction Rooms',
-                action: 'See All ›',
+                title: '활성 예측방',
+                action: '전체 보기',
                 onAction: () => context.go('/rooms'),
               ),
               const SizedBox(height: 14),
               const _DetailRoomCard(
                 icon: Icons.groups_rounded,
-                title: 'Elite Analyst Lounge',
+                title: '예측 고수 라운지',
                 count: '18/20',
-                avatars: ['M', 'K', '+16'],
+                avatars: ['민', '김', '+16'],
               ),
               SizedBox(height: 16),
               const _DetailRoomCard(
                 icon: Icons.stars_rounded,
-                title: 'Pro Bets Only',
+                title: '실력자 전용 예측방',
                 count: '5/10',
-                avatars: ['J', '+4'],
+                avatars: ['지', '+4'],
               ),
             ],
           ),
           Positioned(
             left: 20,
             right: 20,
-            bottom: 100,
+            bottom: 16,
             child: PrimaryCta(
               label: '예측방 만들기',
               icon: Icons.add_circle_outline_rounded,
               onPressed: () => context.go('/rooms/create'),
+            ),
+          ),
+          FigmaTopBar(
+            title: '맨시티 VS 아스널',
+            subtitle: '경기 상세',
+            centerTitle: false,
+            showBack: true,
+            trailing: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.share_outlined, color: FigmaColors.green),
             ),
           ),
         ],
@@ -91,7 +90,7 @@ class _HeroMatchDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 336,
+      height: 324,
       margin: const EdgeInsets.symmetric(horizontal: -20),
       padding: const EdgeInsets.fromLTRB(20, 34, 20, 20),
       decoration: const BoxDecoration(
@@ -107,15 +106,15 @@ class _HeroMatchDetail extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              _BigTeam(mark: 'MC', name: 'Man City', color: FigmaColors.blue),
+              _BigTeam(mark: '맨시', name: '맨시티', color: FigmaColors.blue),
               Padding(
                 padding: EdgeInsets.only(top: 42),
                 child: Column(
                   children: [
                     Text(
-                      'MATCHDAY 32',
+                      '매치데이 32',
                       style: TextStyle(
-                        color: FigmaColors.blueSoft,
+                        color: FigmaColors.green,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.6,
@@ -124,17 +123,17 @@ class _HeroMatchDetail extends StatelessWidget {
                     SizedBox(height: 8),
                     ScoreText('21:00', size: 46),
                     SizedBox(height: 8),
-                    StatusPill(label: '●  PRE-MATCH', color: FigmaColors.pink),
+                    StatusPill(label: '경기 전', color: FigmaColors.pink),
                   ],
                 ),
               ),
-              _BigTeam(mark: 'ARS', name: 'Arsenal', color: FigmaColors.red),
+              _BigTeam(mark: '아스', name: '아스널', color: FigmaColors.red),
             ],
           ),
           const SizedBox(height: 28),
-          const SmallMeta('⌖  Etihad Stadium, Manchester'),
+          const SmallMeta('에티하드 스타디움, 맨체스터'),
           const SizedBox(height: 10),
-          const SmallMeta('□  April 26, 2024'),
+          const SmallMeta('2024년 4월 26일'),
         ],
       ),
     );
@@ -154,14 +153,15 @@ class _BigTeam extends StatelessWidget {
       width: 106,
       child: Column(
         children: [
-          TeamMark(label: mark, size: 96, color: color),
+          TeamMark(label: mark, size: 88, color: color),
           const SizedBox(height: 12),
           Text(
             name,
             maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: FigmaColors.text,
-              fontSize: 21,
+              fontSize: 19,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -220,15 +220,15 @@ class _FormCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SmallMeta('Last 5 Matches'),
+          const SmallMeta('최근 5경기'),
           const SizedBox(height: 16),
           Row(
             children: const [
-              _FormDot('W', FigmaColors.green),
-              _FormDot('W', FigmaColors.green),
-              _FormDot('D', FigmaColors.muted),
-              _FormDot('W', FigmaColors.green),
-              _FormDot('W', FigmaColors.green),
+              _FormDot('승', FigmaColors.green),
+              _FormDot('승', FigmaColors.green),
+              _FormDot('무', FigmaColors.muted),
+              _FormDot('승', FigmaColors.green),
+              _FormDot('승', FigmaColors.green),
             ],
           ),
         ],
@@ -273,7 +273,7 @@ class _ProbabilityCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SmallMeta('승리 Probability'),
+                const SmallMeta('승리 확률'),
                 const SizedBox(height: 10),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(999),
@@ -291,7 +291,7 @@ class _ProbabilityCard extends StatelessWidget {
           const Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              SmallMeta('Avg Goals'),
+              SmallMeta('평균 득점'),
               SizedBox(height: 6),
               Text(
                 '2.8',
@@ -332,7 +332,7 @@ class _DetailRoomCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 backgroundColor: FigmaColors.blue.withValues(alpha: 0.28),
-                child: Icon(icon, color: FigmaColors.blueSoft),
+                child: Icon(icon, color: FigmaColors.green),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -340,7 +340,7 @@ class _DetailRoomCard extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: FigmaColors.text,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -361,12 +361,17 @@ class _DetailRoomCard extends StatelessWidget {
                   ),
                 ),
               const Spacer(),
-              const Text(
-                'Join Room  →',
-                style: TextStyle(
-                  color: FigmaColors.blueSoft,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
+              const Flexible(
+                child: Text(
+                  '방 참여하기',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    color: FigmaColors.green,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],

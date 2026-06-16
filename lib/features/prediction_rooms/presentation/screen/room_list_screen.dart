@@ -12,15 +12,8 @@ class RoomListScreen extends StatelessWidget {
       bottomNavIndex: 2,
       child: Stack(
         children: [
-          FigmaTopBar(
-            title: '예측방',
-            trailing: IconButton(
-              onPressed: () => context.go('/rooms/create'),
-              icon: const Icon(Icons.add_rounded, color: FigmaColors.blueSoft),
-            ),
-          ),
           AppScrollView(
-            topPadding: 88,
+            topPadding: 96,
             children: [
               const SectionTitle(title: '참여 중인 예측방'),
               const SizedBox(height: 16),
@@ -46,6 +39,15 @@ class RoomListScreen extends StatelessWidget {
                 onPressed: () => context.go('/rooms/create'),
               ),
             ],
+          ),
+          FigmaTopBar(
+            title: '예측방',
+            subtitle: '참여 중인 방',
+            centerTitle: false,
+            trailing: IconButton(
+              onPressed: () => context.go('/rooms/create'),
+              icon: const Icon(Icons.add_rounded, color: FigmaColors.green),
+            ),
           ),
         ],
       ),

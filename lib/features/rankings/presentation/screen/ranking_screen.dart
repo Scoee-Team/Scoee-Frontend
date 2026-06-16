@@ -2,34 +2,40 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/figma_widgets.dart';
 
-class RankingScreen extends StatelessWidget {
+class RankingScreen extends StatefulWidget {
   const RankingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const RankingAndMyScreen(activeMy: false);
-  }
+  State<RankingScreen> createState() => _RankingScreenState();
 }
 
-class RankingAndMyScreen extends StatelessWidget {
-  const RankingAndMyScreen({required this.activeMy, super.key});
-
-  final bool activeMy;
+class _RankingScreenState extends State<RankingScreen> {
+  var _tab = _RankingTab.ranking;
 
   @override
   Widget build(BuildContext context) {
     return FigmaPage(
-      bottomNavIndex: activeMy ? 4 : 3,
+      bottomNavIndex: 3,
       child: Stack(
         children: [
-          const FigmaTopBar(title: 'The Loser'),
           AppScrollView(
-            topPadding: 80,
+            topPadding: 96,
             children: [
-              _SegmentedHeader(activeMy: activeMy),
+              _SegmentedHeader(
+                selected: _tab,
+                onChanged: (tab) => setState(() => _tab = tab),
+              ),
               const SizedBox(height: 28),
-              if (activeMy) const _MyPanel() else const _RankingPanel(),
+              if (_tab == _RankingTab.ranking)
+                const _RankingPanel()
+              else
+                const _MyRankingPanel(),
             ],
+          ),
+          const FigmaTopBar(
+            title: '랭킹',
+            subtitle: '전체 랭킹과 내 기록',
+            centerTitle: false,
           ),
         ],
       ),
@@ -37,10 +43,13 @@ class RankingAndMyScreen extends StatelessWidget {
   }
 }
 
-class _SegmentedHeader extends StatelessWidget {
-  const _SegmentedHeader({required this.activeMy});
+enum _RankingTab { ranking, my }
 
-  final bool activeMy;
+class _SegmentedHeader extends StatelessWidget {
+  const _SegmentedHeader({required this.selected, required this.onChanged});
+
+  final _RankingTab selected;
+  final ValueChanged<_RankingTab> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +63,18 @@ class _SegmentedHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _Segment(label: 'Ranking', active: !activeMy),
+            child: _Segment(
+              label: '랭킹',
+              active: selected == _RankingTab.ranking,
+              onTap: () => onChanged(_RankingTab.ranking),
+            ),
           ),
           Expanded(
-            child: _Segment(label: 'My', active: activeMy),
+            child: _Segment(
+              label: '내 랭킹',
+              active: selected == _RankingTab.my,
+              onTap: () => onChanged(_RankingTab.my),
+            ),
           ),
         ],
       ),
@@ -66,25 +83,35 @@ class _SegmentedHeader extends StatelessWidget {
 }
 
 class _Segment extends StatelessWidget {
-  const _Segment({required this.label, required this.active});
+  const _Segment({
+    required this.label,
+    required this.active,
+    required this.onTap,
+  });
 
   final String label;
   final bool active;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: active ? const Color(0xFF12C95A) : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: active ? const Color(0xFF02260F) : FigmaColors.muted,
-          fontSize: 16,
-          fontWeight: FontWeight.w800,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: active ? const Color(0xFF12C95A) : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: active ? const Color(0xFF02260F) : FigmaColors.muted,
+            fontSize: 15,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 0.25,
+          ),
         ),
       ),
     );
@@ -98,7 +125,11 @@ class _RankingPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: const [
-        _ProfileSummary(),
+        _ProfileSummary(
+          eyebrow: '이달의 예측왕',
+          title: '예측 고수',
+          meta: '정확도 94.2% · 12회 예측 적중',
+        ),
         SizedBox(height: 28),
         Align(
           alignment: Alignment.centerLeft,
@@ -114,84 +145,106 @@ class _RankingPanel extends StatelessWidget {
         SizedBox(height: 18),
         _RankingRow(
           rank: '1',
-          name: 'KanelsAble',
-          points: '+2,450 pts',
-          meta: '이달의 수익',
+          name: '카넬',
+          points: '+2,450점',
+          meta: '이달의 정확도 96.1%',
         ),
         SizedBox(height: 16),
         _RankingRow(
-          rank: 'L',
-          name: 'Worst Pick',
-          points: '-1,120\npts',
+          rank: '꼴',
+          name: '최대 편차',
+          points: '편차 15.4',
           meta: '역대 최대 꼴찌',
           danger: true,
         ),
         SizedBox(height: 16),
-        _RankingRow(
-          rank: '3',
-          name: 'GoalGetter',
-          points: '+1,890 pts',
-          meta: '누적 랭킹',
-        ),
+        _RankingRow(rank: '3', name: '골잡이', points: '+1,890점', meta: '누적 랭킹'),
       ],
     );
   }
 }
 
-class _MyPanel extends StatelessWidget {
-  const _MyPanel();
+class _MyRankingPanel extends StatelessWidget {
+  const _MyRankingPanel();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: const [
-        _ProfileSummary(),
+        _ProfileSummary(
+          eyebrow: '내 랭킹',
+          title: '민우',
+          meta: '전체 12위 · 이번 달 4위',
+          trophy: Icons.person_pin_rounded,
+        ),
         SizedBox(height: 18),
         FigmaCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SmallMeta('내 활동'),
+              SmallMeta('내 예측 지표'),
               SizedBox(height: 16),
-              _MyRow(label: '참여 중인 예측방', value: '2'),
-              _MyRow(label: '평균 편차', value: '2.4'),
-              _MyRow(label: '이번 달 꼴찌', value: '1회'),
+              _MetricRow(label: '참여 중인 예측방', value: '2'),
+              _MetricRow(label: '평균 편차', value: '2.4'),
+              _MetricRow(label: '정확도', value: '84.8%'),
+              _MetricRow(label: '이번 달 꼴찌', value: '1회'),
             ],
           ),
         ),
+        SizedBox(height: 18),
+        _RankingRow(rank: '12', name: '민우', points: '+980점', meta: '상위 18%'),
       ],
     );
   }
 }
 
 class _ProfileSummary extends StatelessWidget {
-  const _ProfileSummary();
+  const _ProfileSummary({
+    required this.eyebrow,
+    required this.title,
+    required this.meta,
+    this.trophy = Icons.emoji_events_rounded,
+  });
+
+  final String eyebrow;
+  final String title;
+  final String meta;
+  final IconData trophy;
 
   @override
   Widget build(BuildContext context) {
     return FigmaCard(
       child: Row(
-        children: const [
-          TeamMark(label: 'P', size: 64, color: FigmaColors.green),
-          SizedBox(width: 16),
+        children: [
+          const TeamMark(label: '예', size: 64, color: FigmaColors.green),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Prediction Pro',
-                  style: TextStyle(
+                  eyebrow,
+                  style: const TextStyle(
+                    color: FigmaColors.green,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: const TextStyle(
                     color: FigmaColors.text,
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                SizedBox(height: 6),
-                SmallMeta('정확도 94.2% · 12회 예측 적중'),
+                const SizedBox(height: 6),
+                SmallMeta(meta),
               ],
             ),
           ),
-          Icon(Icons.emoji_events_rounded, color: FigmaColors.dim, size: 62),
+          Icon(trophy, color: FigmaColors.dim, size: 54),
         ],
       ),
     );
@@ -226,7 +279,7 @@ class _RankingRow extends StatelessWidget {
               rank,
               style: TextStyle(
                 color: color,
-                fontSize: 48,
+                fontSize: rank.length > 1 ? 28 : 40,
                 fontWeight: FontWeight.w900,
                 height: 1,
               ),
@@ -242,18 +295,23 @@ class _RankingRow extends StatelessWidget {
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(color: FigmaColors.text, fontSize: 18),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: FigmaColors.text, fontSize: 16),
             ),
           ),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 points,
                 textAlign: TextAlign.right,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: color,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -266,8 +324,8 @@ class _RankingRow extends StatelessWidget {
   }
 }
 
-class _MyRow extends StatelessWidget {
-  const _MyRow({required this.label, required this.value});
+class _MetricRow extends StatelessWidget {
+  const _MetricRow({required this.label, required this.value});
 
   final String label;
   final String value;

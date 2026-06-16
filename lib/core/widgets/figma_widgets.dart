@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -37,27 +35,108 @@ class FigmaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 390),
-          child: DecoratedBox(
-            decoration: BoxDecoration(color: backgroundColor),
-            child: Stack(
-              children: [
-                Positioned.fill(child: child),
-                if (bottomNavIndex != null)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: FigmaBottomNav(activeIndex: bottomNavIndex!),
-                  ),
-              ],
-            ),
-          ),
+    final content = SafeArea(
+      top: false,
+      bottom: bottomNavIndex == null,
+      child: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final shouldConstrain = constraints.maxWidth > 430;
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: shouldConstrain ? 390 : double.infinity,
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: backgroundColor),
+                child: child,
+              ),
+            );
+          },
         ),
+      ),
+    );
+
+    if (bottomNavIndex != null) {
+      return content;
+    }
+
+    return Scaffold(backgroundColor: backgroundColor, body: content);
+  }
+}
+
+class FigmaShellScaffold extends StatelessWidget {
+  const FigmaShellScaffold({
+    required this.child,
+    this.activeIndex,
+    this.onDestinationSelected,
+    super.key,
+  });
+
+  final Widget child;
+  final int? activeIndex;
+  final ValueChanged<int>? onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).uri.path;
+    final resolvedIndex = activeIndex ?? _indexForLocation(location);
+
+    return Scaffold(
+      backgroundColor: FigmaColors.page,
+      body: child,
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: FigmaColors.appBar,
+          border: Border(top: BorderSide(color: FigmaColors.border)),
+        ),
+        child: FigmaBottomNav(
+          activeIndex: resolvedIndex,
+          onDestinationSelected:
+              onDestinationSelected ??
+              (index) {
+                final route = switch (index) {
+                  0 => '/',
+                  1 => '/matches',
+                  2 => '/rooms',
+                  3 => '/ranking',
+                  _ => '/profile',
+                };
+                if (route != location) {
+                  context.go(route);
+                }
+              },
+        ),
+      ),
+    );
+  }
+
+  int _indexForLocation(String location) {
+    if (location.startsWith('/matches')) return 1;
+    if (location.startsWith('/rooms')) return 2;
+    if (location.startsWith('/ranking')) return 3;
+    if (location.startsWith('/profile')) return 4;
+    return 0;
+  }
+}
+
+class FigmaScreenScope extends StatelessWidget {
+  const FigmaScreenScope({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final shouldConstrain = constraints.maxWidth > 430;
+          return ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: shouldConstrain ? 390 : double.infinity,
+            ),
+            child: child,
+          );
+        },
       ),
     );
   }
@@ -81,9 +160,11 @@ class FigmaTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topInset = MediaQuery.paddingOf(context).top;
+
     return Container(
-      height: 64,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: topInset + 64,
+      padding: EdgeInsets.fromLTRB(20, topInset, 20, 0),
       decoration: const BoxDecoration(
         color: FigmaColors.appBar,
         border: Border(bottom: BorderSide(color: FigmaColors.border)),
@@ -91,11 +172,14 @@ class FigmaTopBar extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: centerTitle ? 48 : 0,
+            width: showBack
+                ? 40
+                : centerTitle
+                ? 48
+                : 0,
             child: showBack
                 ? IconButton(
-                    onPressed: () =>
-                        context.canPop() ? context.pop() : context.go('/'),
+                    onPressed: () => _goBack(context),
                     icon: const Icon(Icons.chevron_left_rounded),
                     color: FigmaColors.blueSoft,
                     iconSize: 32,
@@ -105,6 +189,7 @@ class FigmaTopBar extends StatelessWidget {
                 ? const Icon(Icons.menu_rounded, color: FigmaColors.blueSoft)
                 : const SizedBox.shrink(),
           ),
+          if (showBack && !centerTitle) const SizedBox(width: 8),
           Expanded(
             child: centerTitle
                 ? Text(
@@ -115,8 +200,9 @@ class FigmaTopBar extends StatelessWidget {
                     style: const TextStyle(
                       color: FigmaColors.text,
                       fontSize: 24,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w900,
                       height: 1.15,
+                      letterSpacing: 0.4,
                     ),
                   )
                 : Column(
@@ -126,9 +212,11 @@ class FigmaTopBar extends StatelessWidget {
                       if (subtitle != null)
                         Text(
                           subtitle!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: FigmaColors.muted,
-                            fontSize: 13,
+                            fontSize: 12,
                             height: 1.2,
                           ),
                         ),
@@ -138,9 +226,10 @@ class FigmaTopBar extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: FigmaColors.text,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
                           height: 1.15,
+                          letterSpacing: 0.35,
                         ),
                       ),
                     ],
@@ -164,111 +253,127 @@ class FigmaTopBar extends StatelessWidget {
       ),
     );
   }
+
+  void _goBack(BuildContext context) {
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+
+    final path = GoRouterState.of(context).uri.path;
+    if (path.startsWith('/matches/')) {
+      context.go('/matches');
+      return;
+    }
+    if (path == '/rooms/create') {
+      context.go('/rooms');
+      return;
+    }
+    if (path.startsWith('/rooms/') &&
+        (path.endsWith('/predict') || path.endsWith('/result'))) {
+      context.go(path.substring(0, path.lastIndexOf('/')));
+      return;
+    }
+    if (path.startsWith('/rooms/')) {
+      context.go('/rooms');
+      return;
+    }
+    context.go('/');
+  }
 }
 
 class FigmaBottomNav extends StatelessWidget {
-  const FigmaBottomNav({required this.activeIndex, super.key});
+  const FigmaBottomNav({
+    required this.activeIndex,
+    required this.onDestinationSelected,
+    super.key,
+  });
 
   final int activeIndex;
+  final ValueChanged<int> onDestinationSelected;
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      _NavItem('Home', Icons.home_outlined, Icons.home_rounded, '/'),
-      _NavItem(
-        'Matches',
-        Icons.sports_soccer_outlined,
-        Icons.sports_soccer_rounded,
-        '/matches',
-      ),
-      _NavItem('Rooms', Icons.groups_outlined, Icons.groups_rounded, '/rooms'),
-      _NavItem(
-        'Ranking',
-        Icons.bar_chart_rounded,
-        Icons.bar_chart_rounded,
-        '/ranking',
-      ),
-      _NavItem(
-        'My',
-        Icons.person_outline_rounded,
-        Icons.person_rounded,
-        '/profile',
-      ),
+    final items = const [
+      _NavItem('홈', Icons.home_outlined, Icons.home_rounded),
+      _NavItem('경기', Icons.sports_soccer_outlined, Icons.sports_soccer_rounded),
+      _NavItem('예측방', Icons.groups_outlined, Icons.groups_rounded),
+      _NavItem('랭킹', Icons.bar_chart_rounded, Icons.bar_chart_rounded),
+      _NavItem('내 정보', Icons.person_outline_rounded, Icons.person_rounded),
     ];
 
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          height: 80,
-          decoration: const BoxDecoration(
-            color: FigmaColors.appBar,
-            border: Border(top: BorderSide(color: FigmaColors.border)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              for (var i = 0; i < items.length; i++)
-                _BottomNavButton(
-                  item: items[i],
-                  active: i == activeIndex,
-                  onTap: () => context.go(items[i].route),
-                ),
-            ],
-          ),
+    return SafeArea(
+      top: false,
+      child: _MaterialBottomNav(
+        activeIndex: activeIndex,
+        items: items,
+        onDestinationSelected: onDestinationSelected,
+      ),
+    );
+  }
+}
+
+class _MaterialBottomNav extends StatelessWidget {
+  const _MaterialBottomNav({
+    required this.activeIndex,
+    required this.items,
+    required this.onDestinationSelected,
+  });
+
+  final int activeIndex;
+  final List<_NavItem> items;
+  final ValueChanged<int> onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        navigationBarTheme: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            final selected = states.contains(WidgetState.selected);
+            return TextStyle(
+              color: selected ? FigmaColors.green : FigmaColors.muted,
+              fontSize: 11,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+              height: 1.1,
+            );
+          }),
+          iconTheme: WidgetStateProperty.resolveWith((states) {
+            final selected = states.contains(WidgetState.selected);
+            return IconThemeData(
+              color: selected ? FigmaColors.green : FigmaColors.muted,
+              size: 23,
+            );
+          }),
         ),
+      ),
+      child: NavigationBar(
+        selectedIndex: activeIndex,
+        height: 76,
+        backgroundColor: FigmaColors.appBar,
+        surfaceTintColor: Colors.transparent,
+        indicatorColor: Colors.transparent,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        onDestinationSelected: onDestinationSelected,
+        destinations: [
+          for (var i = 0; i < items.length; i++)
+            NavigationDestination(
+              icon: Icon(items[i].icon),
+              selectedIcon: Icon(items[i].activeIcon),
+              label: items[i].label,
+            ),
+        ],
       ),
     );
   }
 }
 
 class _NavItem {
-  const _NavItem(this.label, this.icon, this.activeIcon, this.route);
+  const _NavItem(this.label, this.icon, this.activeIcon);
 
   final String label;
   final IconData icon;
   final IconData activeIcon;
-  final String route;
-}
-
-class _BottomNavButton extends StatelessWidget {
-  const _BottomNavButton({
-    required this.item,
-    required this.active,
-    required this.onTap,
-  });
-
-  final _NavItem item;
-  final bool active;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = active ? FigmaColors.green : FigmaColors.muted;
-    return InkWell(
-      onTap: onTap,
-      child: SizedBox(
-        width: 68,
-        height: 58,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(active ? item.activeIcon : item.icon, color: color, size: 23),
-            const SizedBox(height: 4),
-            Text(
-              item.label,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-                height: 1.1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class FigmaCard extends StatelessWidget {
@@ -333,7 +438,11 @@ class SectionTitle extends StatelessWidget {
             onPressed: onAction,
             child: Text(
               action!,
-              style: const TextStyle(color: FigmaColors.blueSoft, fontSize: 12),
+              style: const TextStyle(
+                color: FigmaColors.green,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
       ],
@@ -369,14 +478,22 @@ class TeamMark extends StatelessWidget {
           BoxShadow(color: color.withValues(alpha: 0.18), blurRadius: 18),
         ],
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color.computeLuminance() > 0.5
-              ? Colors.black
-              : FigmaColors.text,
-          fontSize: size < 44 ? 11 : 13,
-          fontWeight: FontWeight.w900,
+      child: Padding(
+        padding: EdgeInsets.all(size * 0.16),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            maxLines: 1,
+            style: TextStyle(
+              color: color.computeLuminance() > 0.5
+                  ? Colors.black
+                  : FigmaColors.text,
+              fontSize: size < 44 ? 11 : 14,
+              fontWeight: FontWeight.w800,
+              height: 1,
+            ),
+          ),
         ),
       ),
     );
@@ -398,7 +515,7 @@ class StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: filled ? color : color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(999),
@@ -406,10 +523,12 @@ class StatusPill extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           color: filled ? Colors.black : color,
-          fontSize: 11,
-          fontWeight: FontWeight.w800,
+          fontSize: 10.5,
+          fontWeight: FontWeight.w700,
           height: 1,
         ),
       ),
@@ -422,7 +541,7 @@ class PrimaryCta extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.color = FigmaColors.blue,
+    this.color = FigmaColors.green,
     super.key,
   });
 
@@ -433,28 +552,39 @@ class PrimaryCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 56,
-      width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: onPressed,
-        icon: icon == null ? const SizedBox.shrink() : Icon(icon, size: 22),
-        label: Text(label),
-        style: FilledButton.styleFrom(
-          backgroundColor: color,
-          disabledBackgroundColor: const Color(0xFF303137),
-          foregroundColor: const Color(0xFF052A55),
-          disabledForegroundColor: FigmaColors.muted,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            height: 1.2,
-          ),
-        ),
+    final foreground = color.computeLuminance() > 0.35
+        ? const Color(0xFF04190A)
+        : FigmaColors.text;
+    final style = FilledButton.styleFrom(
+      backgroundColor: color,
+      disabledBackgroundColor: const Color(0xFF24262B),
+      foregroundColor: foreground,
+      disabledForegroundColor: FigmaColors.dim,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      minimumSize: const Size(0, 52),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      textStyle: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w700,
+        height: 1.15,
       ),
+    );
+    final text = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+    );
+
+    return SizedBox(
+      height: 52,
+      width: double.infinity,
+      child: icon == null
+          ? FilledButton(onPressed: onPressed, style: style, child: text)
+          : FilledButton.icon(
+              onPressed: onPressed,
+              icon: Icon(icon, size: 19),
+              label: text,
+              style: style,
+            ),
     );
   }
 }
@@ -463,7 +593,7 @@ class AppScrollView extends StatelessWidget {
   const AppScrollView({
     required this.children,
     this.topPadding = 80,
-    this.bottomPadding = 104,
+    this.bottomPadding = 24,
     super.key,
   });
 
@@ -473,8 +603,10 @@ class AppScrollView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final safeTop = MediaQuery.paddingOf(context).top;
+
     return ListView(
-      padding: EdgeInsets.fromLTRB(20, topPadding, 20, bottomPadding),
+      padding: EdgeInsets.fromLTRB(20, safeTop + topPadding, 20, bottomPadding),
       children: children,
     );
   }
@@ -489,9 +621,11 @@ class SmallMeta extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
       style: const TextStyle(
         color: FigmaColors.muted,
-        fontSize: 12,
+        fontSize: 11.5,
         fontWeight: FontWeight.w600,
         height: 1.3,
       ),
@@ -507,14 +641,18 @@ class ScoreText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: FigmaColors.text,
-        fontSize: size,
-        fontWeight: FontWeight.w900,
-        height: 1,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        text,
+        maxLines: 1,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: FigmaColors.text,
+          fontSize: size,
+          fontWeight: FontWeight.w800,
+          height: 1,
+        ),
       ),
     );
   }

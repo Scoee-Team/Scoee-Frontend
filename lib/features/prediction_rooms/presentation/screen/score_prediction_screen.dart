@@ -13,19 +13,11 @@ class ScorePredictionScreen extends StatelessWidget {
       bottomNavIndex: 1,
       child: Stack(
         children: [
-          const FigmaTopBar(
-            title: '스코어 예측하기',
-            showBack: true,
-            trailing: Icon(
-              Icons.help_outline_rounded,
-              color: FigmaColors.muted,
-            ),
-          ),
           AppScrollView(
-            topPadding: 82,
-            bottomPadding: 176,
+            topPadding: 96,
+            bottomPadding: 100,
             children: const [
-              SmallMeta('MATCHWEEK 24'),
+              SmallMeta('매치위크 24'),
               SizedBox(height: 12),
               Text(
                 '이번 주의 주요 경기 예측',
@@ -59,11 +51,21 @@ class ScorePredictionScreen extends StatelessWidget {
           Positioned(
             left: 20,
             right: 20,
-            bottom: 96,
+            bottom: 16,
             child: PrimaryCta(
               label: '예측 제출하기',
               icon: Icons.send_rounded,
               onPressed: () {},
+            ),
+          ),
+          const FigmaTopBar(
+            title: '스코어 예측하기',
+            subtitle: '마감 전까지 수정할 수 있어요',
+            centerTitle: false,
+            showBack: true,
+            trailing: Icon(
+              Icons.help_outline_rounded,
+              color: FigmaColors.muted,
             ),
           ),
         ],
@@ -79,18 +81,18 @@ class _MainScoreInputCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return FigmaCard(
       radius: 20,
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+      padding: const EdgeInsets.fromLTRB(14, 10, 14, 22),
       child: Column(
         children: [
           Align(
             alignment: Alignment.topRight,
-            child: StatusPill(label: '● PRE-MATCH', color: FigmaColors.pink),
+            child: StatusPill(label: '경기 전', color: FigmaColors.pink),
           ),
           Row(
             children: const [
               Expanded(
                 child: _InputTeam(
-                  mark: 'MC',
+                  mark: '맨시',
                   name: '맨체스터 시티',
                   color: FigmaColors.blue,
                 ),
@@ -106,7 +108,7 @@ class _MainScoreInputCard extends StatelessWidget {
               _LargeStepper(score: '0'),
               Expanded(
                 child: _InputTeam(
-                  mark: 'LIV',
+                  mark: '리버',
                   name: '리버풀',
                   color: FigmaColors.red,
                 ),
@@ -114,7 +116,7 @@ class _MainScoreInputCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          StatusPill(label: '↗  48%가 홈 승리 예측', color: FigmaColors.green),
+          StatusPill(label: '48%가 홈 승리 예측', color: FigmaColors.green),
         ],
       ),
     );
@@ -136,15 +138,16 @@ class _InputTeam extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TeamMark(label: mark, color: color, size: 64),
+        TeamMark(label: mark, color: color, size: 58),
         const SizedBox(height: 12),
         Text(
           name,
           textAlign: TextAlign.center,
           maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             color: FigmaColors.text,
-            fontSize: 16,
+            fontSize: 14,
             height: 1.1,
           ),
         ),
@@ -217,7 +220,7 @@ class _CompactPredictionRow extends StatelessWidget {
         children: [
           Row(
             children: [
-              SmallMeta('▮▮▮  $time'),
+              SmallMeta(time),
               const Spacer(),
               Text(
                 complete ? '예측 완료' : '미작성',
