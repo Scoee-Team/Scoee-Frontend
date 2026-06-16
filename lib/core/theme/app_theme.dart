@@ -8,7 +8,7 @@ class AppTheme {
 
   static ThemeData dark() {
     final base = ThemeData.dark(useMaterial3: true);
-    final textTheme = GoogleFonts.notoSansKrTextTheme(base.textTheme).apply(
+    final textTheme = GoogleFonts.astaSansTextTheme(base.textTheme).apply(
       bodyColor: AppColors.primaryText,
       displayColor: AppColors.primaryText,
     );
