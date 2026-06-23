@@ -67,15 +67,12 @@ class RoomDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               FigmaCard(
-                color: const Color(0xFF2D3038),
+                color: FigmaColors.cardAlt,
                 child: Row(
                   children: const [
                     CircleAvatar(
-                      backgroundColor: Color(0xFF164B2A),
-                      child: Icon(
-                        Icons.share_rounded,
-                        color: FigmaColors.green,
-                      ),
+                      backgroundColor: Color(0x242C2C2E),
+                      child: Icon(Icons.share_rounded, color: FigmaColors.blue),
                     ),
                     SizedBox(width: 16),
                     Expanded(
@@ -127,9 +124,9 @@ class RoomDetailScreen extends StatelessWidget {
             trailing: const Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(Icons.info_outline_rounded, color: FigmaColors.green),
+                Icon(Icons.info_outline_rounded, color: FigmaColors.blue),
                 SizedBox(width: 8),
-                Icon(Icons.settings_outlined, color: FigmaColors.green),
+                Icon(Icons.settings_outlined, color: FigmaColors.blue),
               ],
             ),
           ),
@@ -144,7 +141,7 @@ class _MiniStat extends StatelessWidget {
     required this.label,
     required this.value,
     required this.meta,
-    this.color = FigmaColors.green,
+    this.color = FigmaColors.blue,
   });
 
   final String label;
@@ -207,7 +204,7 @@ class _ParticipantStrip extends StatelessWidget {
                   TeamMark(
                     label: person.$2,
                     size: 56,
-                    color: person.$3 ? FigmaColors.green : FigmaColors.blueSoft,
+                    color: person.$3 ? FigmaColors.blue : FigmaColors.blueSoft,
                   ),
                   if (person.$3)
                     const Positioned(
@@ -215,8 +212,8 @@ class _ParticipantStrip extends StatelessWidget {
                       bottom: 0,
                       child: CircleAvatar(
                         radius: 8,
-                        backgroundColor: FigmaColors.green,
-                        child: Icon(Icons.check, size: 11, color: Colors.black),
+                        backgroundColor: FigmaColors.blue,
+                        child: Icon(Icons.check, size: 11, color: Colors.white),
                       ),
                     ),
                 ],
@@ -286,7 +283,7 @@ class _PredictionTargetCard extends StatelessWidget {
           Text(
             note,
             style: TextStyle(
-              color: complete ? FigmaColors.green : FigmaColors.pink,
+              color: complete ? FigmaColors.blue : FigmaColors.pink,
               fontSize: 12,
               fontWeight: FontWeight.w700,
             ),
@@ -296,7 +293,7 @@ class _PredictionTargetCard extends StatelessWidget {
             label: button,
             icon: complete ? Icons.refresh_rounded : Icons.edit_note_rounded,
             onPressed: onTap,
-            color: complete ? const Color(0xFF303137) : FigmaColors.green,
+            color: complete ? const Color(0xFF303137) : FigmaColors.blue,
           ),
         ],
       ),

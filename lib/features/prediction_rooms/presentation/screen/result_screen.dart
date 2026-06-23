@@ -77,7 +77,7 @@ class _FinalScoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return FigmaCard(
       radius: 10,
-      borderColor: FigmaColors.red.withValues(alpha: 0.35),
+      borderColor: Colors.white.withValues(alpha: 0.10),
       child: Column(
         children: [
           Row(
@@ -94,7 +94,7 @@ class _FinalScoreCard extends StatelessWidget {
                 child: _ResultTeam(
                   mark: '리버',
                   name: '리버풀',
-                  color: FigmaColors.red,
+                  color: FigmaColors.blueSoft,
                 ),
               ),
               ScoreText('4:1', size: 48),
@@ -212,12 +212,12 @@ class _ResultRow extends StatelessWidget {
     final color = loser
         ? FigmaColors.pink
         : best
-        ? FigmaColors.green
+        ? FigmaColors.blue
         : FigmaColors.muted;
     return FigmaCard(
-      color: loser ? const Color(0xFF2C1719) : FigmaColors.card,
+      color: loser ? FigmaColors.cardAlt : FigmaColors.card,
       borderColor: loser
-          ? FigmaColors.pink.withValues(alpha: 0.5)
+          ? FigmaColors.pink.withValues(alpha: 0.28)
           : FigmaColors.border,
       child: Row(
         children: [

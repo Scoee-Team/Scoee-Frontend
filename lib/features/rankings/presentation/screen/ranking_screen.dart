@@ -101,13 +101,13 @@ class _Segment extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: active ? const Color(0xFF12C95A) : Colors.transparent,
+          color: active ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: active ? const Color(0xFF02260F) : FigmaColors.muted,
+            color: active ? Colors.black : FigmaColors.muted,
             fontSize: 15,
             fontWeight: FontWeight.w900,
             letterSpacing: 0.25,
@@ -216,7 +216,7 @@ class _ProfileSummary extends StatelessWidget {
     return FigmaCard(
       child: Row(
         children: [
-          const TeamMark(label: '예', size: 64, color: FigmaColors.green),
+          const TeamMark(label: '예', size: 64, color: FigmaColors.blue),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -225,7 +225,7 @@ class _ProfileSummary extends StatelessWidget {
                 Text(
                   eyebrow,
                   style: const TextStyle(
-                    color: FigmaColors.green,
+                    color: FigmaColors.blue,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -268,7 +268,7 @@ class _RankingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = danger ? FigmaColors.red : FigmaColors.green;
+    final color = danger ? FigmaColors.pink : FigmaColors.blue;
     return FigmaCard(
       color: FigmaColors.cardAlt,
       child: Row(
@@ -289,7 +289,7 @@ class _RankingRow extends StatelessWidget {
           TeamMark(
             label: name.substring(0, 1),
             size: 36,
-            color: danger ? FigmaColors.red : FigmaColors.blueSoft,
+            color: danger ? FigmaColors.pink : FigmaColors.blueSoft,
           ),
           const SizedBox(width: 16),
           Expanded(

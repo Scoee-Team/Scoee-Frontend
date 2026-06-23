@@ -29,7 +29,7 @@ class RoomListScreen extends StatelessWidget {
                 title: '챔스 토너먼트 마스터',
                 status: '완료',
                 meta: '예측 완료 · 현재 12위 / 50명',
-                color: FigmaColors.green,
+                color: FigmaColors.blue,
                 onTap: () => context.go('/rooms/11'),
               ),
               const SizedBox(height: 30),
@@ -46,7 +46,7 @@ class RoomListScreen extends StatelessWidget {
             centerTitle: false,
             trailing: IconButton(
               onPressed: () => context.go('/rooms/create'),
-              icon: const Icon(Icons.add_rounded, color: FigmaColors.green),
+              icon: const Icon(Icons.add_rounded, color: FigmaColors.blue),
             ),
           ),
         ],

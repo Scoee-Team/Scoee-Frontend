@@ -210,10 +210,10 @@ class _LogoutButton extends StatelessWidget {
       icon: const Icon(Icons.logout_rounded),
       label: const Text('로그아웃'),
       style: OutlinedButton.styleFrom(
-        foregroundColor: FigmaColors.pink,
-        side: BorderSide(color: FigmaColors.pink.withValues(alpha: 0.45)),
+        foregroundColor: FigmaColors.muted,
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.12)),
         minimumSize: const Size.fromHeight(52),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }

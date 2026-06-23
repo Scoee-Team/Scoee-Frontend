@@ -124,13 +124,13 @@ class _TypeChip extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: selected ? FigmaColors.blue : Colors.transparent,
+        color: selected ? Colors.white : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: selected ? const Color(0xFF052A55) : FigmaColors.muted,
+          color: selected ? Colors.black : FigmaColors.muted,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -150,7 +150,7 @@ class _SelectedMatch extends StatelessWidget {
       color: FigmaColors.cardAlt,
       child: Row(
         children: [
-          const TeamMark(label: '프리', size: 44, color: FigmaColors.green),
+          const TeamMark(label: '프리', size: 44, color: FigmaColors.blue),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

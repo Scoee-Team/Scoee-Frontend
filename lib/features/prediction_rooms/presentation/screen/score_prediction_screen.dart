@@ -110,13 +110,13 @@ class _MainScoreInputCard extends StatelessWidget {
                 child: _InputTeam(
                   mark: '리버',
                   name: '리버풀',
-                  color: FigmaColors.red,
+                  color: FigmaColors.blueSoft,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          StatusPill(label: '48%가 홈 승리 예측', color: FigmaColors.green),
+          StatusPill(label: '48%가 홈 승리 예측', color: FigmaColors.blue),
         ],
       ),
     );
@@ -225,7 +225,7 @@ class _CompactPredictionRow extends StatelessWidget {
               Text(
                 complete ? '예측 완료' : '미작성',
                 style: TextStyle(
-                  color: complete ? FigmaColors.green : FigmaColors.muted,
+                  color: complete ? FigmaColors.blue : FigmaColors.muted,
                   fontSize: 12,
                 ),
               ),

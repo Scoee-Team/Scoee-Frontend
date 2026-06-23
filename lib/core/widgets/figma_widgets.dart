@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:ui';
 
 import '../constants/app_colors.dart';
 
 class FigmaColors {
   const FigmaColors._();
 
-  static const page = Color(0xFF050505);
-  static const appBar = Color(0xFF101115);
-  static const card = Color(0xFF121212);
-  static const cardAlt = Color(0xFF1B1C21);
-  static const border = Color(0xFF27282D);
-  static const text = Color(0xFFE7E7EC);
-  static const muted = Color(0xFF969BA8);
-  static const dim = Color(0xFF646A78);
-  static const blue = Color(0xFF3E90FF);
-  static const blueSoft = Color(0xFFA9C6FF);
-  static const green = Color(0xFF47E266);
-  static const red = Color(0xFFFF6B65);
-  static const pink = Color(0xFFFFB4AB);
+  static const page = Color(0xFF000000);
+  static const appBar = Color(0xB8000000);
+  static const card = Color(0xFF161616);
+  static const cardAlt = Color(0xFF1C1C1E);
+  static const border = Color(0xFF2C2C2E);
+  static const text = Color(0xFFF5F5F7);
+  static const muted = Color(0xFFAEAEB2);
+  static const dim = Color(0xFF6E6E73);
+  static const blue = Color(0xFF0A84FF);
+  static const blueSoft = Color(0xFF64A8FF);
+  static const green = Color(0xFF0A84FF);
+  static const red = Color(0xFFFF453A);
+  static const pink = Color(0xFFFF9F0A);
 }
 
 class FigmaPage extends StatelessWidget {
@@ -84,27 +85,37 @@ class FigmaShellScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: FigmaColors.page,
       body: child,
-      bottomNavigationBar: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: FigmaColors.appBar,
-          border: Border(top: BorderSide(color: FigmaColors.border)),
-        ),
-        child: FigmaBottomNav(
-          activeIndex: resolvedIndex,
-          onDestinationSelected:
-              onDestinationSelected ??
-              (index) {
-                final route = switch (index) {
-                  0 => '/',
-                  1 => '/matches',
-                  2 => '/rooms',
-                  3 => '/ranking',
-                  _ => '/profile',
-                };
-                if (route != location) {
-                  context.go(route);
-                }
-              },
+      bottomNavigationBar: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: FigmaColors.appBar,
+              border: Border(
+                top: BorderSide(
+                  color: Colors.white.withValues(alpha: 0.08),
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: FigmaBottomNav(
+              activeIndex: resolvedIndex,
+              onDestinationSelected:
+                  onDestinationSelected ??
+                  (index) {
+                    final route = switch (index) {
+                      0 => '/',
+                      1 => '/matches',
+                      2 => '/rooms',
+                      3 => '/ranking',
+                      _ => '/profile',
+                    };
+                    if (route != location) {
+                      context.go(route);
+                    }
+                  },
+            ),
+          ),
         ),
       ),
     );
@@ -162,94 +173,103 @@ class FigmaTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final topInset = MediaQuery.paddingOf(context).top;
 
-    return Container(
-      height: topInset + 64,
-      padding: EdgeInsets.fromLTRB(20, topInset, 20, 0),
-      decoration: const BoxDecoration(
-        color: FigmaColors.appBar,
-        border: Border(bottom: BorderSide(color: FigmaColors.border)),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: showBack
-                ? 40
-                : centerTitle
-                ? 48
-                : 0,
-            child: showBack
-                ? IconButton(
-                    onPressed: () => _goBack(context),
-                    icon: const Icon(Icons.chevron_left_rounded),
-                    color: FigmaColors.blueSoft,
-                    iconSize: 32,
-                    padding: EdgeInsets.zero,
-                  )
-                : centerTitle
-                ? const Icon(Icons.menu_rounded, color: FigmaColors.blueSoft)
-                : const SizedBox.shrink(),
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+        child: Container(
+          height: topInset + 60,
+          padding: EdgeInsets.fromLTRB(20, topInset, 16, 0),
+          decoration: BoxDecoration(
+            color: FigmaColors.appBar,
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 0.5,
+              ),
+            ),
           ),
-          if (showBack && !centerTitle) const SizedBox(width: 8),
-          Expanded(
-            child: centerTitle
-                ? Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: FigmaColors.text,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      height: 1.15,
-                      letterSpacing: 0.4,
-                    ),
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (subtitle != null)
-                        Text(
-                          subtitle!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: FigmaColors.muted,
-                            fontSize: 12,
-                            height: 1.2,
-                          ),
-                        ),
-                      Text(
+          child: Row(
+            children: [
+              SizedBox(
+                width: showBack
+                    ? 40
+                    : centerTitle
+                    ? 48
+                    : 0,
+                child: showBack
+                    ? IconButton(
+                        onPressed: () => _goBack(context),
+                        icon: const Icon(Icons.chevron_left_rounded),
+                        color: FigmaColors.blue,
+                        iconSize: 30,
+                        padding: EdgeInsets.zero,
+                      )
+                    : centerTitle
+                    ? const Icon(Icons.menu_rounded, color: FigmaColors.blue)
+                    : const SizedBox.shrink(),
+              ),
+              if (showBack && !centerTitle) const SizedBox(width: 8),
+              Expanded(
+                child: centerTitle
+                    ? Text(
                         title,
-                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: FigmaColors.text,
                           fontSize: 22,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w800,
                           height: 1.15,
-                          letterSpacing: 0.35,
                         ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (subtitle != null)
+                            Text(
+                              subtitle!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: FigmaColors.dim,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                height: 1.2,
+                              ),
+                            ),
+                          Text(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: FigmaColors.text,
+                              fontSize: 21,
+                              fontWeight: FontWeight.w800,
+                              height: 1.15,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-          ),
-          SizedBox(
-            width: trailing == null ? 48 : 72,
-            child:
-                trailing ??
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(
-                      Icons.notifications_none_rounded,
-                      color: FigmaColors.blueSoft,
+              ),
+              SizedBox(
+                width: trailing == null ? 48 : 72,
+                child:
+                    trailing ??
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(
+                          Icons.notifications_none_rounded,
+                          color: FigmaColors.blue,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -332,7 +352,7 @@ class _MaterialBottomNav extends StatelessWidget {
           labelTextStyle: WidgetStateProperty.resolveWith((states) {
             final selected = states.contains(WidgetState.selected);
             return TextStyle(
-              color: selected ? FigmaColors.green : FigmaColors.muted,
+              color: selected ? FigmaColors.blue : FigmaColors.dim,
               fontSize: 11,
               fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
               height: 1.1,
@@ -341,7 +361,7 @@ class _MaterialBottomNav extends StatelessWidget {
           iconTheme: WidgetStateProperty.resolveWith((states) {
             final selected = states.contains(WidgetState.selected);
             return IconThemeData(
-              color: selected ? FigmaColors.green : FigmaColors.muted,
+              color: selected ? FigmaColors.blue : FigmaColors.dim,
               size: 23,
             );
           }),
@@ -350,7 +370,7 @@ class _MaterialBottomNav extends StatelessWidget {
       child: NavigationBar(
         selectedIndex: activeIndex,
         height: 76,
-        backgroundColor: FigmaColors.appBar,
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         indicatorColor: Colors.transparent,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -382,7 +402,7 @@ class FigmaCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.color = FigmaColors.card,
     this.borderColor = FigmaColors.border,
-    this.radius = 12,
+    this.radius = 20,
     super.key,
   });
 
@@ -399,7 +419,14 @@ class FigmaCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: borderColor, width: 0.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.20),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: child,
     );
@@ -427,7 +454,7 @@ class SectionTitle extends StatelessWidget {
             title,
             style: const TextStyle(
               color: FigmaColors.text,
-              fontSize: 21,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
               height: 1.3,
             ),
@@ -439,9 +466,9 @@ class SectionTitle extends StatelessWidget {
             child: Text(
               action!,
               style: const TextStyle(
-                color: FigmaColors.green,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+                color: FigmaColors.blue,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -470,13 +497,11 @@ class TeamMark extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [color.withValues(alpha: 0.34), FigmaColors.cardAlt],
+        color: Colors.white.withValues(alpha: 0.08),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.12),
+          width: 0.5,
         ),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-        boxShadow: [
-          BoxShadow(color: color.withValues(alpha: 0.18), blurRadius: 18),
-        ],
       ),
       child: Padding(
         padding: EdgeInsets.all(size * 0.16),
@@ -486,9 +511,7 @@ class TeamMark extends StatelessWidget {
             label,
             maxLines: 1,
             style: TextStyle(
-              color: color.computeLuminance() > 0.5
-                  ? Colors.black
-                  : FigmaColors.text,
+              color: FigmaColors.text,
               fontSize: size < 44 ? 11 : 14,
               fontWeight: FontWeight.w800,
               height: 1,
@@ -517,16 +540,18 @@ class StatusPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: filled ? color : color.withValues(alpha: 0.15),
+        color: filled
+            ? Colors.white.withValues(alpha: 0.10)
+            : color.withValues(alpha: 0.13),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.45)),
+        border: Border.all(color: color.withValues(alpha: 0.30), width: 0.5),
       ),
       child: Text(
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          color: filled ? Colors.black : color,
+          color: filled ? FigmaColors.text : color,
           fontSize: 10.5,
           fontWeight: FontWeight.w700,
           height: 1,
@@ -541,7 +566,7 @@ class PrimaryCta extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.color = FigmaColors.green,
+    this.color = FigmaColors.blue,
     super.key,
   });
 
@@ -552,17 +577,15 @@ class PrimaryCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = color.computeLuminance() > 0.35
-        ? const Color(0xFF04190A)
-        : FigmaColors.text;
+    final foreground = FigmaColors.text;
     final style = FilledButton.styleFrom(
       backgroundColor: color,
-      disabledBackgroundColor: const Color(0xFF24262B),
+      disabledBackgroundColor: const Color(0xFF242426),
       foregroundColor: foreground,
       disabledForegroundColor: FigmaColors.dim,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       minimumSize: const Size(0, 52),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       textStyle: const TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w700,

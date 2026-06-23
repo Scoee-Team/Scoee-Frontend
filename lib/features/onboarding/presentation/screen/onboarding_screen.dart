@@ -62,7 +62,7 @@ class _OnboardingBody extends StatelessWidget {
                     center: Alignment.topRight,
                     radius: 1.35,
                     colors: [
-                      const Color(0x1A47E266),
+                      const Color(0x140A84FF),
                       const Color(0x0505FF05).withValues(alpha: 0),
                       AppColors.background,
                     ],
@@ -74,12 +74,12 @@ class _OnboardingBody extends StatelessWidget {
             const Positioned(
               top: 224,
               left: 98,
-              child: _SoftGlow(color: Color(0x0DAAC7FF), size: 384),
+              child: _SoftGlow(color: Color(0x0D64A8FF), size: 384),
             ),
             const Positioned(
               right: -98,
               bottom: 224,
-              child: _SoftGlow(color: Color(0x0D47E266), size: 256),
+              child: _SoftGlow(color: Color(0x0D0A84FF), size: 256),
             ),
             Positioned(
               top: 0,
@@ -190,7 +190,7 @@ class _HeroVisual extends StatelessWidget {
         children: [
           const Positioned.fill(
             child: Center(
-              child: _SoftGlow(color: Color(0x20AAC7FF), size: 300),
+              child: _SoftGlow(color: Color(0x2064A8FF), size: 300),
             ),
           ),
           Transform.rotate(
@@ -256,7 +256,7 @@ class _ScoreChip extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.trending_up_rounded, color: Color(0xFF47E266), size: 18),
+          Icon(Icons.trending_up_rounded, color: Color(0xFF0A84FF), size: 18),
           SizedBox(width: 8),
           Text(
             '2 : 1',
@@ -292,7 +292,7 @@ class _LoserChip extends StatelessWidget {
           Text(
             '꼴찌',
             style: TextStyle(
-              color: Color(0xFFFFB4AB),
+              color: Color(0xFFFF9F0A),
               fontSize: 20,
               fontWeight: FontWeight.w600,
               height: 28 / 20,
@@ -325,7 +325,7 @@ class _OnboardingCopy extends StatelessWidget {
               TextSpan(text: '친구들과 함께 경기 스코어를\n'),
               TextSpan(
                 text: '예측해보세요',
-                style: TextStyle(color: Color(0xFF3E90FF)),
+                style: TextStyle(color: Color(0xFF0A84FF)),
               ),
             ],
           ),
@@ -345,9 +345,9 @@ class _OnboardingCopy extends StatelessWidget {
               TextSpan(
                 text: '꼴찌',
                 style: TextStyle(
-                  color: Color(0xFFFFB4AB),
+                  color: Color(0xFFFF9F0A),
                   decoration: TextDecoration.underline,
-                  decorationColor: Color(0x4DFFB4AA),
+                  decorationColor: Color(0x4DFF9F0A),
                 ),
               ),
               TextSpan(text: '입니다.'),
@@ -367,7 +367,7 @@ class _PageIndicator extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: const [
-        _IndicatorDot(width: 32, color: Color(0xFF3E90FF)),
+        _IndicatorDot(width: 32, color: Color(0xFF0A84FF)),
         SizedBox(width: 8),
         _IndicatorDot(width: 6, color: Color(0xFF414754)),
         SizedBox(width: 8),
@@ -428,8 +428,8 @@ class _BottomActions extends StatelessWidget {
                     child: FilledButton(
                       onPressed: () => context.go('/'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFF47E266),
-                        foregroundColor: const Color(0xFF04190A),
+                        backgroundColor: const Color(0xFF0A84FF),
+                        foregroundColor: const Color(0xFFF5F5F7),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -459,7 +459,7 @@ class _BottomActions extends StatelessWidget {
                           child: TextButton(
                             onPressed: () => context.go('/'),
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF47E266),
+                              foregroundColor: const Color(0xFF0A84FF),
                               textStyle: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -478,7 +478,7 @@ class _BottomActions extends StatelessWidget {
                           child: TextButton(
                             onPressed: () => context.go('/'),
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF47E266),
+                              foregroundColor: const Color(0xFF0A84FF),
                               textStyle: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
