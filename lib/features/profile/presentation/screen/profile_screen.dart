@@ -21,17 +21,14 @@ class ProfileScreen extends StatelessWidget {
                 title: '계정',
                 items: [
                   _SettingsItem(
-                    icon: Icons.person_outline_rounded,
                     title: '프로필 설정',
                     subtitle: '닉네임과 대표 이미지를 관리합니다',
                   ),
                   _SettingsItem(
-                    icon: Icons.favorite_border_rounded,
                     title: '관심 리그와 팀',
                     subtitle: '홈 화면 추천 기준을 변경합니다',
                   ),
                   _SettingsItem(
-                    icon: Icons.notifications_none_rounded,
                     title: '알림 설정',
                     subtitle: '예측 마감과 결과 알림을 관리합니다',
                   ),
@@ -41,21 +38,12 @@ class ProfileScreen extends StatelessWidget {
               const _SettingsSection(
                 title: '서비스',
                 items: [
+                  _SettingsItem(title: '도움말', subtitle: '예측방과 편차 계산 안내'),
                   _SettingsItem(
-                    icon: Icons.help_outline_rounded,
-                    title: '도움말',
-                    subtitle: '예측방과 편차 계산 안내',
-                  ),
-                  _SettingsItem(
-                    icon: Icons.policy_outlined,
                     title: '약관 및 개인정보',
                     subtitle: '서비스 이용 정책을 확인합니다',
                   ),
-                  _SettingsItem(
-                    icon: Icons.info_outline_rounded,
-                    title: '앱 정보',
-                    subtitle: 'Scoee 1.0.0',
-                  ),
+                  _SettingsItem(title: '앱 정보', subtitle: 'Scoee 1.0.0'),
                 ],
               ),
               const SizedBox(height: 22),
@@ -138,7 +126,8 @@ class _SettingsSection extends StatelessWidget {
                   const Divider(
                     height: 1,
                     color: FigmaColors.border,
-                    indent: 64,
+                    indent: 16,
+                    endIndent: 16,
                   ),
               ],
             ],
@@ -150,26 +139,15 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _SettingsItem extends StatelessWidget {
-  const _SettingsItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
+  const _SettingsItem({required this.title, required this.subtitle});
 
-  final IconData icon;
   final String title;
   final String subtitle;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      minLeadingWidth: 32,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      leading: CircleAvatar(
-        radius: 18,
-        backgroundColor: FigmaColors.blue.withValues(alpha: 0.16),
-        child: Icon(icon, color: FigmaColors.blueSoft, size: 20),
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       title: Text(
         title,
         maxLines: 1,
@@ -193,6 +171,7 @@ class _SettingsItem extends StatelessWidget {
       trailing: const Icon(
         Icons.chevron_right_rounded,
         color: FigmaColors.muted,
+        size: 22,
       ),
     );
   }
