@@ -10,7 +10,45 @@ class RankingScreen extends StatefulWidget {
 }
 
 class _RankingScreenState extends State<RankingScreen> {
-  var _tab = _RankingTab.ranking;
+  var _tab = _RankingTab.room;
+
+  static const _roomRows = [
+    _RankingItem(
+      rank: 1,
+      name: '지훈',
+      headline: '총 편차 1',
+      meta: '4경기 예측 · 가장 가까운 예측',
+      marker: '지',
+    ),
+    _RankingItem(
+      rank: 2,
+      name: '현아',
+      headline: '총 편차 3',
+      meta: '4경기 예측 · 평균 편차 0.8',
+      marker: '현',
+    ),
+    _RankingItem(
+      rank: 3,
+      name: '상혁',
+      headline: '총 편차 3',
+      meta: '4경기 예측 · 동률',
+      marker: '상',
+    ),
+    _RankingItem(
+      rank: 4,
+      name: '민우',
+      headline: '총 편차 8',
+      meta: '오늘의 꼴찌',
+      marker: '민',
+    ),
+  ];
+
+  static const _myRows = [
+    _MetricItem(label: '참여 중인 예측방', value: '2'),
+    _MetricItem(label: '평균 편차', value: '2.4'),
+    _MetricItem(label: '가장 가까운 예측', value: '7회'),
+    _MetricItem(label: '이번 달 꼴찌', value: '1회'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +59,20 @@ class _RankingScreenState extends State<RankingScreen> {
           AppScrollView(
             topPadding: 96,
             children: [
-              _SegmentedHeader(
+              _RankingFilterBar(
                 selected: _tab,
                 onChanged: (tab) => setState(() => _tab = tab),
               ),
-              const SizedBox(height: 28),
-              if (_tab == _RankingTab.ranking)
-                const _RankingPanel()
+              const SizedBox(height: 18),
+              if (_tab == _RankingTab.room)
+                const _RoomRankingPanel(rows: _roomRows)
               else
-                const _MyRankingPanel(),
+                const _MyRankingPanel(metrics: _myRows),
             ],
           ),
           const FigmaTopBar(
             title: '랭킹',
-            subtitle: '전체 랭킹과 내 기록',
+            subtitle: '편차와 예측 기록',
             centerTitle: false,
           ),
         ],
@@ -43,10 +81,8 @@ class _RankingScreenState extends State<RankingScreen> {
   }
 }
 
-enum _RankingTab { ranking, my }
-
-class _SegmentedHeader extends StatelessWidget {
-  const _SegmentedHeader({required this.selected, required this.onChanged});
+class _RankingFilterBar extends StatelessWidget {
+  const _RankingFilterBar({required this.selected, required this.onChanged});
 
   final _RankingTab selected;
   final ValueChanged<_RankingTab> onChanged;
@@ -58,22 +94,26 @@ class _SegmentedHeader extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: FigmaColors.cardAlt,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 0.5,
+        ),
       ),
       child: Row(
         children: [
           Expanded(
-            child: _Segment(
-              label: '랭킹',
-              active: selected == _RankingTab.ranking,
-              onTap: () => onChanged(_RankingTab.ranking),
+            child: _FilterSegment(
+              label: '방 랭킹',
+              active: selected == _RankingTab.room,
+              onTap: () => onChanged(_RankingTab.room),
             ),
           ),
           Expanded(
-            child: _Segment(
-              label: '내 랭킹',
-              active: selected == _RankingTab.my,
-              onTap: () => onChanged(_RankingTab.my),
+            child: _FilterSegment(
+              label: '내 기록',
+              active: selected == _RankingTab.mine,
+              onTap: () => onChanged(_RankingTab.mine),
             ),
           ),
         ],
@@ -82,8 +122,8 @@ class _SegmentedHeader extends StatelessWidget {
   }
 }
 
-class _Segment extends StatelessWidget {
-  const _Segment({
+class _FilterSegment extends StatelessWidget {
+  const _FilterSegment({
     required this.label,
     required this.active,
     required this.onTap,
@@ -97,20 +137,20 @@ class _Segment extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: active ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           label,
           style: TextStyle(
             color: active ? Colors.black : FigmaColors.muted,
-            fontSize: 15,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 0.25,
+            fontSize: 14,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ),
@@ -118,240 +158,359 @@ class _Segment extends StatelessWidget {
   }
 }
 
-class _RankingPanel extends StatelessWidget {
-  const _RankingPanel();
+class _RoomRankingPanel extends StatelessWidget {
+  const _RoomRankingPanel({required this.rows});
+
+  final List<_RankingItem> rows;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
-        _ProfileSummary(
-          eyebrow: '이달의 예측왕',
-          title: '예측 고수',
-          meta: '정확도 94.2% · 12회 예측 적중',
+      children: [
+        const _SummaryCard(
+          title: '주말 프리미어리그 예측방',
+          meta: '4경기 반영 · 편차 낮을수록 정확해요',
+          value: '1점',
+          valueLabel: '최저 편차',
+          icon: Icons.leaderboard_rounded,
         ),
-        SizedBox(height: 28),
-        Align(
+        const SizedBox(height: 18),
+        const Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '주요 랭킹',
+            '참여자 순위',
             style: TextStyle(
               color: FigmaColors.text,
-              fontSize: 21,
-              fontWeight: FontWeight.w700,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ),
-        SizedBox(height: 18),
-        _RankingRow(
-          rank: '1',
-          name: '카넬',
-          points: '+2,450점',
-          meta: '이달의 정확도 96.1%',
-        ),
-        SizedBox(height: 16),
-        _RankingRow(
-          rank: '꼴',
-          name: '최대 편차',
-          points: '편차 15.4',
-          meta: '역대 최대 꼴찌',
-          danger: true,
-        ),
-        SizedBox(height: 16),
-        _RankingRow(rank: '3', name: '골잡이', points: '+1,890점', meta: '누적 랭킹'),
+        const SizedBox(height: 12),
+        for (final item in rows) ...[
+          _RankingTile(item: item),
+          const SizedBox(height: 12),
+        ],
       ],
     );
   }
 }
 
 class _MyRankingPanel extends StatelessWidget {
-  const _MyRankingPanel();
+  const _MyRankingPanel({required this.metrics});
+
+  final List<_MetricItem> metrics;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
-        _ProfileSummary(
-          eyebrow: '내 랭킹',
+      children: [
+        const _SummaryCard(
           title: '민우',
           meta: '전체 12위 · 이번 달 4위',
-          trophy: Icons.person_pin_rounded,
+          value: '2.4',
+          valueLabel: '평균 편차',
+          icon: Icons.person_pin_rounded,
         ),
-        SizedBox(height: 18),
+        const SizedBox(height: 18),
         FigmaCard(
+          color: FigmaColors.cardAlt,
+          padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SmallMeta('내 예측 지표'),
-              SizedBox(height: 16),
-              _MetricRow(label: '참여 중인 예측방', value: '2'),
-              _MetricRow(label: '평균 편차', value: '2.4'),
-              _MetricRow(label: '정확도', value: '84.8%'),
-              _MetricRow(label: '이번 달 꼴찌', value: '1회'),
+              for (var i = 0; i < metrics.length; i++) ...[
+                _MetricRow(item: metrics[i]),
+                if (i != metrics.length - 1)
+                  const Divider(height: 22, color: FigmaColors.border),
+              ],
             ],
           ),
         ),
-        SizedBox(height: 18),
-        _RankingRow(rank: '12', name: '민우', points: '+980점', meta: '상위 18%'),
+        const SizedBox(height: 18),
+        const _RankingTile(
+          item: _RankingItem(
+            rank: 12,
+            name: '민우',
+            headline: '평균 편차 2.4',
+            meta: '상위 18% · 최근 10경기 기준',
+            marker: '민',
+          ),
+        ),
       ],
     );
   }
 }
 
-class _ProfileSummary extends StatelessWidget {
-  const _ProfileSummary({
-    required this.eyebrow,
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
     required this.title,
     required this.meta,
-    this.trophy = Icons.emoji_events_rounded,
+    required this.value,
+    required this.valueLabel,
+    required this.icon,
   });
 
-  final String eyebrow;
   final String title;
   final String meta;
-  final IconData trophy;
+  final String value;
+  final String valueLabel;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return FigmaCard(
+      color: FigmaColors.cardAlt,
+      padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          const TeamMark(label: '예', size: 64, color: FigmaColors.blue),
-          const SizedBox(width: 16),
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: FigmaColors.blue, size: 22),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  eyebrow,
-                  style: const TextStyle(
-                    color: FigmaColors.blue,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: FigmaColors.text,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 5),
                 SmallMeta(meta),
               ],
             ),
           ),
-          Icon(trophy, color: FigmaColors.dim, size: 54),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  color: FigmaColors.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                valueLabel,
+                style: const TextStyle(
+                  color: FigmaColors.dim,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-class _RankingRow extends StatelessWidget {
-  const _RankingRow({
-    required this.rank,
-    required this.name,
-    required this.points,
-    required this.meta,
-    this.danger = false,
-  });
+class _RankingTile extends StatelessWidget {
+  const _RankingTile({required this.item});
 
-  final String rank;
-  final String name;
-  final String points;
-  final String meta;
-  final bool danger;
+  final _RankingItem item;
 
   @override
   Widget build(BuildContext context) {
-    final color = danger ? FigmaColors.pink : FigmaColors.blue;
+    final progress = switch (item.rank) {
+      1 => 0.92,
+      2 => 0.74,
+      3 => 0.62,
+      _ => 0.42,
+    };
+
     return FigmaCard(
       color: FigmaColors.cardAlt,
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+      borderColor: FigmaColors.border,
+      child: Column(
         children: [
-          SizedBox(
-            width: 42,
-            child: Text(
-              rank,
-              style: TextStyle(
-                color: color,
-                fontSize: rank.length > 1 ? 28 : 40,
-                fontWeight: FontWeight.w900,
-                height: 1,
-              ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          TeamMark(
-            label: name.substring(0, 1),
-            size: 36,
-            color: danger ? FigmaColors.pink : FigmaColors.blueSoft,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: FigmaColors.text, fontSize: 16),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
             children: [
-              Text(
-                points,
-                textAlign: TextAlign.right,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
+              _RankBadge(rank: item.rank),
+              const SizedBox(width: 12),
+              TeamMark(label: item.marker, size: 42),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: FigmaColors.text,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900,
+                        height: 1.1,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    SmallMeta(item.meta),
+                  ],
                 ),
               ),
-              SmallMeta(meta),
+              const SizedBox(width: 12),
+              _DeviationBadge(text: item.headline),
             ],
           ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 4,
+              backgroundColor: Colors.white.withValues(alpha: 0.08),
+              valueColor: AlwaysStoppedAnimation(
+                Colors.white.withValues(alpha: 0.72),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _RankBadge extends StatelessWidget {
+  const _RankBadge({required this.rank});
+
+  final int rank;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 38,
+      height: 38,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: rank == 1 ? 0.16 : 0.08),
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: rank == 1 ? 0.22 : 0.10),
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        '$rank',
+        style: const TextStyle(
+          color: FigmaColors.text,
+          fontSize: 18,
+          fontWeight: FontWeight.w900,
+          height: 1,
+        ),
+      ),
+    );
+  }
+}
+
+class _DeviationBadge extends StatelessWidget {
+  const _DeviationBadge({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 86),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.10),
+          width: 0.5,
+        ),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          text,
+          maxLines: 1,
+          textAlign: TextAlign.right,
+          style: const TextStyle(
+            color: FigmaColors.text,
+            fontSize: 13,
+            fontWeight: FontWeight.w900,
+            height: 1,
+          ),
+        ),
       ),
     );
   }
 }
 
 class _MetricRow extends StatelessWidget {
-  const _MetricRow({required this.label, required this.value});
+  const _MetricRow({required this.item});
 
-  final String label;
-  final String value;
+  final _MetricItem item;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(color: FigmaColors.muted),
-            ),
-          ),
-          Text(
-            value,
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            item.label,
             style: const TextStyle(
-              color: FigmaColors.text,
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
+              color: FigmaColors.muted,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ],
-      ),
+        ),
+        Text(
+          item.value,
+          style: const TextStyle(
+            color: FigmaColors.text,
+            fontSize: 17,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
     );
   }
 }
+
+class _RankingItem {
+  const _RankingItem({
+    required this.rank,
+    required this.name,
+    required this.headline,
+    required this.meta,
+    required this.marker,
+  });
+
+  final int rank;
+  final String name;
+  final String headline;
+  final String meta;
+  final String marker;
+}
+
+class _MetricItem {
+  const _MetricItem({required this.label, required this.value});
+
+  final String label;
+  final String value;
+}
+
+enum _RankingTab { room, mine }

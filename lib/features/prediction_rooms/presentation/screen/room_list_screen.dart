@@ -218,8 +218,6 @@ class _RoomListTile extends StatelessWidget {
           children: [
             Row(
               children: [
-                TeamMark(label: room.type == '단일 경기' ? '1' : 'M', size: 40),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
