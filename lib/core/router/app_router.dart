@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/presentation/screen/login_screen.dart';
 import '../../features/home/presentation/screen/home_screen.dart';
 import '../../features/matches/presentation/screen/match_detail_screen.dart';
 import '../../features/matches/presentation/screen/match_list_screen.dart';
@@ -18,8 +19,9 @@ import '../widgets/figma_widgets.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/login',
     routes: [
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
