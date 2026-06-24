@@ -397,26 +397,17 @@ class _RankBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 38,
-      height: 38,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: rank == 1 ? 0.16 : 0.08),
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: rank == 1 ? 0.22 : 0.10),
-          width: 0.5,
-        ),
-      ),
+    return SizedBox(
+      width: 30,
       child: Text(
         '$rank',
         style: const TextStyle(
           color: FigmaColors.text,
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.w900,
           height: 1,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
