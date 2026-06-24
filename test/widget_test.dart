@@ -9,7 +9,7 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: ScoeeApp()));
     await tester.pumpAndSettle();
 
-    expect(find.text('Scoee'), findsOneWidget);
+    expect(find.byType(Image), findsOneWidget);
     expect(find.text('홈'), findsOneWidget);
     expect(find.text('경기'), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);

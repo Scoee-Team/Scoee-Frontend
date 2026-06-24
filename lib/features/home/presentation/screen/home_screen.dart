@@ -139,16 +139,13 @@ class _TranslucentTopBar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Expanded(
-                child: Text(
-                  'Scoee',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: _AppleHomeColors.text,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    height: 34,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
