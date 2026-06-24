@@ -12,6 +12,7 @@ import '../../features/prediction_rooms/presentation/screen/room_detail_screen.d
 import '../../features/prediction_rooms/presentation/screen/room_list_screen.dart';
 import '../../features/prediction_rooms/presentation/screen/score_prediction_screen.dart';
 import '../../features/profile/presentation/screen/profile_screen.dart';
+import '../../features/profile/presentation/screen/profile_settings_screens.dart';
 import '../../features/rankings/presentation/screen/ranking_screen.dart';
 import '../widgets/figma_widgets.dart';
 
@@ -109,6 +110,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/profile',
                 builder: (context, state) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    builder: (context, state) => const ProfileEditScreen(),
+                  ),
+                  GoRoute(
+                    path: 'favorites',
+                    builder: (context, state) => const FavoriteSettingsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) =>
+                        const NotificationSettingsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'help',
+                    builder: (context, state) => const HelpScreen(),
+                  ),
+                  GoRoute(
+                    path: 'policies',
+                    builder: (context, state) => const PoliciesScreen(),
+                  ),
+                  GoRoute(
+                    path: 'about',
+                    builder: (context, state) => const AboutAppScreen(),
+                  ),
+                ],
               ),
             ],
           ),

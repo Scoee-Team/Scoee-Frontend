@@ -77,14 +77,14 @@ class _RoomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FigmaCard(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: TextField(
-        style: const TextStyle(color: FigmaColors.text),
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
-          border: InputBorder.none,
+    return TextField(
+      style: const TextStyle(color: FigmaColors.text),
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
         ),
       ),
     );

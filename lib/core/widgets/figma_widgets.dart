@@ -298,6 +298,10 @@ class FigmaTopBar extends StatelessWidget {
       context.go('/rooms');
       return;
     }
+    if (path.startsWith('/profile/')) {
+      context.go('/profile');
+      return;
+    }
     context.go('/');
   }
 }

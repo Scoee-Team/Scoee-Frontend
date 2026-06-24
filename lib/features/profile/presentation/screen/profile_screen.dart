@@ -15,22 +15,20 @@ class ProfileScreen extends StatelessWidget {
           AppScrollView(
             topPadding: 96,
             children: [
-              const _ProfileHeader(),
+              _ProfileHeader(onTap: () => context.go('/profile/edit')),
               const SizedBox(height: 24),
               const _SettingsSection(
                 title: '계정',
                 items: [
                   _SettingsItem(
-                    title: '프로필 설정',
-                    subtitle: '닉네임과 대표 이미지를 관리합니다',
-                  ),
-                  _SettingsItem(
                     title: '관심 리그와 팀',
                     subtitle: '홈 화면 추천 기준을 변경합니다',
+                    route: '/profile/favorites',
                   ),
                   _SettingsItem(
                     title: '알림 설정',
                     subtitle: '예측 마감과 결과 알림을 관리합니다',
+                    route: '/profile/notifications',
                   ),
                 ],
               ),
@@ -38,12 +36,21 @@ class ProfileScreen extends StatelessWidget {
               const _SettingsSection(
                 title: '서비스',
                 items: [
-                  _SettingsItem(title: '도움말', subtitle: '예측방과 편차 계산 안내'),
+                  _SettingsItem(
+                    title: '도움말',
+                    subtitle: '예측방과 편차 계산 안내',
+                    route: '/profile/help',
+                  ),
                   _SettingsItem(
                     title: '약관 및 개인정보',
                     subtitle: '서비스 이용 정책을 확인합니다',
+                    route: '/profile/policies',
                   ),
-                  _SettingsItem(title: '앱 정보', subtitle: 'Scoee 1.0.0'),
+                  _SettingsItem(
+                    title: '앱 정보',
+                    subtitle: 'Scoee 1.0.0',
+                    route: '/profile/about',
+                  ),
                 ],
               ),
               const SizedBox(height: 22),
@@ -62,34 +69,47 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader();
+  const _ProfileHeader({required this.onTap});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return FigmaCard(
-      child: Row(
-        children: const [
-          TeamMark(label: '민', size: 64, color: FigmaColors.blueSoft),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '민우',
-                  style: TextStyle(
-                    color: FigmaColors.text,
-                    fontSize: 21,
-                    fontWeight: FontWeight.w800,
-                  ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: const FigmaCard(
+          child: Row(
+            children: [
+              TeamMark(label: '민', size: 64, color: FigmaColors.blueSoft),
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '민우',
+                      style: TextStyle(
+                        color: FigmaColors.text,
+                        fontSize: 21,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    SmallMeta('참여 중인 예측방 2개 · 평균 편차 2.4'),
+                  ],
                 ),
-                SizedBox(height: 6),
-                SmallMeta('참여 중인 예측방 2개 · 평균 편차 2.4'),
-              ],
-            ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: FigmaColors.muted,
+                size: 24,
+              ),
+            ],
           ),
-          Icon(Icons.chevron_right_rounded, color: FigmaColors.muted),
-        ],
+        ),
       ),
     );
   }
@@ -139,14 +159,20 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _SettingsItem extends StatelessWidget {
-  const _SettingsItem({required this.title, required this.subtitle});
+  const _SettingsItem({
+    required this.title,
+    required this.subtitle,
+    required this.route,
+  });
 
   final String title;
   final String subtitle;
+  final String route;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () => context.go(route),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       title: Text(
         title,
