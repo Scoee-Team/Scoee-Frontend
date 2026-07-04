@@ -16,18 +16,14 @@ class ProfileScreen extends StatelessWidget {
             topPadding: 96,
             children: [
               _ProfileHeader(onTap: () => context.go('/profile/edit')),
-              const SizedBox(height: 24),
+              const SizedBox(height: 14),
+              const _FavoritePreferencePanel(),
+              const SizedBox(height: 22),
               const _SettingsSection(
                 title: '계정',
                 items: [
                   _SettingsItem(
-                    title: '관심 리그와 팀',
-                    subtitle: '홈 화면 추천 기준을 변경합니다',
-                    route: '/profile/favorites',
-                  ),
-                  _SettingsItem(
                     title: '알림 설정',
-                    subtitle: '예측 마감과 결과 알림을 관리합니다',
                     route: '/profile/notifications',
                   ),
                 ],
@@ -36,21 +32,9 @@ class ProfileScreen extends StatelessWidget {
               const _SettingsSection(
                 title: '서비스',
                 items: [
-                  _SettingsItem(
-                    title: '도움말',
-                    subtitle: '예측방과 편차 계산 안내',
-                    route: '/profile/help',
-                  ),
-                  _SettingsItem(
-                    title: '약관 및 개인정보',
-                    subtitle: '서비스 이용 정책을 확인합니다',
-                    route: '/profile/policies',
-                  ),
-                  _SettingsItem(
-                    title: '앱 정보',
-                    subtitle: 'Scoee 1.0.0',
-                    route: '/profile/about',
-                  ),
+                  _SettingsItem(title: '도움말', route: '/profile/help'),
+                  _SettingsItem(title: '약관 및 개인정보', route: '/profile/policies'),
+                  _SettingsItem(title: '앱 정보', route: '/profile/about'),
                 ],
               ),
               const SizedBox(height: 22),
@@ -115,6 +99,275 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
+class _FavoritePreferencePanel extends StatelessWidget {
+  const _FavoritePreferencePanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _showFavoriteSheet(context),
+        borderRadius: BorderRadius.circular(18),
+        child: FigmaCard(
+          color: FigmaColors.cardAlt,
+          radius: 18,
+          padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+          child: Row(
+            children: [
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '관심 리그와 팀',
+                      style: TextStyle(
+                        color: FigmaColors.text,
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        _FavoriteTag('프리미어리그'),
+                        _FavoriteTag('챔피언스리그'),
+                        _FavoriteTag('맨시티'),
+                        _FavoriteTag('아스널'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '수정',
+                style: TextStyle(
+                  color: FigmaColors.blue,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showFavoriteSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const _FavoriteSelectionSheet(),
+    );
+  }
+}
+
+class _FavoriteTag extends StatelessWidget {
+  const _FavoriteTag(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.08),
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: FigmaColors.text,
+          fontSize: 11.5,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+class _FavoriteSelectionSheet extends StatefulWidget {
+  const _FavoriteSelectionSheet();
+
+  @override
+  State<_FavoriteSelectionSheet> createState() =>
+      _FavoriteSelectionSheetState();
+}
+
+class _FavoriteSelectionSheetState extends State<_FavoriteSelectionSheet> {
+  final Set<String> _selectedLeagues = {'프리미어리그', '챔피언스리그'};
+  final Set<String> _selectedTeams = {'맨시티', '아스널'};
+
+  static const _leagues = ['프리미어리그', '챔피언스리그', '라리가', '세리에 A', '분데스리가'];
+  static const _teams = ['맨시티', '아스널', '리버풀', '토트넘', '레알 마드리드', '바르셀로나'];
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+        decoration: const BoxDecoration(
+          color: FigmaColors.card,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 38,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.22),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              '관심 리그와 팀',
+              style: TextStyle(
+                color: FigmaColors.text,
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 22),
+            const _SheetSectionLabel('리그'),
+            const SizedBox(height: 10),
+            _SelectableWrap(
+              items: _leagues,
+              selected: _selectedLeagues,
+              onToggle: (value) => _toggle(_selectedLeagues, value),
+            ),
+            const SizedBox(height: 24),
+            const _SheetSectionLabel('팀'),
+            const SizedBox(height: 10),
+            _SelectableWrap(
+              items: _teams,
+              selected: _selectedTeams,
+              onToggle: (value) => _toggle(_selectedTeams, value),
+            ),
+            const SizedBox(height: 26),
+            PrimaryCta(
+              label: '저장하기',
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _toggle(Set<String> target, String value) {
+    setState(() {
+      if (!target.add(value)) {
+        target.remove(value);
+      }
+    });
+  }
+}
+
+class _SheetSectionLabel extends StatelessWidget {
+  const _SheetSectionLabel(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: const TextStyle(
+        color: FigmaColors.muted,
+        fontSize: 13,
+        fontWeight: FontWeight.w800,
+      ),
+    );
+  }
+}
+
+class _SelectableWrap extends StatelessWidget {
+  const _SelectableWrap({
+    required this.items,
+    required this.selected,
+    required this.onToggle,
+  });
+
+  final List<String> items;
+  final Set<String> selected;
+  final ValueChanged<String> onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final item in items)
+          _SelectableChip(
+            label: item,
+            selected: selected.contains(item),
+            onTap: () => onToggle(item),
+          ),
+      ],
+    );
+  }
+}
+
+class _SelectableChip extends StatelessWidget {
+  const _SelectableChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: selected ? Colors.white : Colors.white.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: selected
+                ? Colors.white
+                : Colors.white.withValues(alpha: 0.10),
+            width: 0.5,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? Colors.black : FigmaColors.text,
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _SettingsSection extends StatelessWidget {
   const _SettingsSection({required this.title, required this.items});
 
@@ -159,45 +412,41 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _SettingsItem extends StatelessWidget {
-  const _SettingsItem({
-    required this.title,
-    required this.subtitle,
-    required this.route,
-  });
+  const _SettingsItem({required this.title, required this.route});
 
   final String title;
-  final String subtitle;
   final String route;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return InkWell(
       onTap: () => context.go(route),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      title: Text(
-        title,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          color: FigmaColors.text,
-          fontSize: 15.5,
-          fontWeight: FontWeight.w700,
+      child: SizedBox(
+        height: 44,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: FigmaColors.text,
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: FigmaColors.muted,
+                size: 20,
+              ),
+            ],
+          ),
         ),
-      ),
-      subtitle: Text(
-        subtitle,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          color: FigmaColors.muted,
-          fontSize: 11.5,
-          height: 1.25,
-        ),
-      ),
-      trailing: const Icon(
-        Icons.chevron_right_rounded,
-        color: FigmaColors.muted,
-        size: 22,
       ),
     );
   }
