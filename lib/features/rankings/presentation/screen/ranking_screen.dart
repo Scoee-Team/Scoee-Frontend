@@ -10,44 +10,44 @@ class RankingScreen extends StatefulWidget {
 }
 
 class _RankingScreenState extends State<RankingScreen> {
-  var _tab = _RankingTab.room;
+  var _tab = _RankingTab.overall;
 
-  static const _roomRows = [
+  static const _overallRows = [
     _RankingItem(
       rank: 1,
       name: '지훈',
-      headline: '총 편차 1',
-      meta: '4경기 예측 · 가장 가까운 예측',
+      headline: '184점',
+      meta: '28경기 참여 · 적중 보너스 9회',
       marker: '지',
     ),
     _RankingItem(
       rank: 2,
       name: '현아',
-      headline: '총 편차 3',
-      meta: '4경기 예측 · 평균 편차 0.8',
+      headline: '171점',
+      meta: '24경기 참여 · 참여 가중치 반영',
       marker: '현',
     ),
     _RankingItem(
       rank: 3,
       name: '상혁',
-      headline: '총 편차 3',
-      meta: '4경기 예측 · 동률',
+      headline: '166점',
+      meta: '31경기 참여 · 꾸준한 예측',
       marker: '상',
     ),
     _RankingItem(
       rank: 4,
       name: '민우',
-      headline: '총 편차 8',
-      meta: '오늘의 꼴찌',
+      headline: '149점',
+      meta: '22경기 참여 · 최근 5경기 +18점',
       marker: '민',
     ),
   ];
 
   static const _myRows = [
-    _MetricItem(label: '참여 중인 예측방', value: '2'),
-    _MetricItem(label: '평균 편차', value: '2.4'),
-    _MetricItem(label: '가장 가까운 예측', value: '7회'),
-    _MetricItem(label: '이번 달 꼴찌', value: '1회'),
+    _MetricItem(label: '집계된 경기', value: '22경기'),
+    _MetricItem(label: '보정 점수', value: '149점'),
+    _MetricItem(label: '정확히 맞힌 경기', value: '7회'),
+    _MetricItem(label: '이번 달 획득 점수', value: '+42점'),
   ];
 
   @override
@@ -64,15 +64,15 @@ class _RankingScreenState extends State<RankingScreen> {
                 onChanged: (tab) => setState(() => _tab = tab),
               ),
               const SizedBox(height: 18),
-              if (_tab == _RankingTab.room)
-                const _RoomRankingPanel(rows: _roomRows)
+              if (_tab == _RankingTab.overall)
+                const _OverallRankingPanel(rows: _overallRows)
               else
                 const _MyRankingPanel(metrics: _myRows),
             ],
           ),
           const FigmaTopBar(
             title: '랭킹',
-            subtitle: '편차와 예측 기록',
+            subtitle: '점수와 예측 기록',
             centerTitle: false,
           ),
         ],
@@ -104,9 +104,9 @@ class _RankingFilterBar extends StatelessWidget {
         children: [
           Expanded(
             child: _FilterSegment(
-              label: '방 랭킹',
-              active: selected == _RankingTab.room,
-              onTap: () => onChanged(_RankingTab.room),
+              label: '전체 랭킹',
+              active: selected == _RankingTab.overall,
+              onTap: () => onChanged(_RankingTab.overall),
             ),
           ),
           Expanded(
@@ -158,8 +158,8 @@ class _FilterSegment extends StatelessWidget {
   }
 }
 
-class _RoomRankingPanel extends StatelessWidget {
-  const _RoomRankingPanel({required this.rows});
+class _OverallRankingPanel extends StatelessWidget {
+  const _OverallRankingPanel({required this.rows});
 
   final List<_RankingItem> rows;
 
@@ -168,10 +168,10 @@ class _RoomRankingPanel extends StatelessWidget {
     return Column(
       children: [
         const _SummaryCard(
-          title: '주말 프리미어리그 예측방',
-          meta: '4경기 반영 · 편차 낮을수록 정확해요',
-          value: '1점',
-          valueLabel: '최저 편차',
+          title: '전체 사용자 랭킹',
+          meta: '100점 시작 · 적중 보너스와 참여 경기 수 보정 반영',
+          value: '184점',
+          valueLabel: '1위 점수',
           icon: Icons.leaderboard_rounded,
         ),
         const SizedBox(height: 18),
@@ -208,8 +208,8 @@ class _MyRankingPanel extends StatelessWidget {
         const _SummaryCard(
           title: '민우',
           meta: '전체 12위 · 이번 달 4위',
-          value: '2.4',
-          valueLabel: '평균 편차',
+          value: '149점',
+          valueLabel: '보정 점수',
           icon: Icons.person_pin_rounded,
         ),
         const SizedBox(height: 18),
@@ -231,8 +231,8 @@ class _MyRankingPanel extends StatelessWidget {
           item: _RankingItem(
             rank: 12,
             name: '민우',
-            headline: '평균 편차 2.4',
-            meta: '상위 18% · 최근 10경기 기준',
+            headline: '149점',
+            meta: '22경기 참여 · 상위 18%',
             marker: '민',
           ),
         ),
@@ -329,61 +329,38 @@ class _RankingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = switch (item.rank) {
-      1 => 0.92,
-      2 => 0.74,
-      3 => 0.62,
-      _ => 0.42,
-    };
-
     return FigmaCard(
       color: FigmaColors.cardAlt,
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+      padding: const EdgeInsets.all(16),
       borderColor: FigmaColors.border,
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              _RankBadge(rank: item.rank),
-              const SizedBox(width: 12),
-              TeamMark(label: item.marker, size: 42),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: FigmaColors.text,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w900,
-                        height: 1.1,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    SmallMeta(item.meta),
-                  ],
+          _RankBadge(rank: item.rank),
+          const SizedBox(width: 12),
+          TeamMark(label: item.marker, size: 42),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: FigmaColors.text,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                    height: 1.1,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              _DeviationBadge(text: item.headline),
-            ],
-          ),
-          const SizedBox(height: 14),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 4,
-              backgroundColor: Colors.white.withValues(alpha: 0.08),
-              valueColor: AlwaysStoppedAnimation(
-                Colors.white.withValues(alpha: 0.72),
-              ),
+                const SizedBox(height: 6),
+                SmallMeta(item.meta),
+              ],
             ),
           ),
+          const SizedBox(width: 12),
+          _ScoreBadge(text: item.headline),
         ],
       ),
     );
@@ -413,8 +390,8 @@ class _RankBadge extends StatelessWidget {
   }
 }
 
-class _DeviationBadge extends StatelessWidget {
-  const _DeviationBadge({required this.text});
+class _ScoreBadge extends StatelessWidget {
+  const _ScoreBadge({required this.text});
 
   final String text;
 
@@ -504,4 +481,4 @@ class _MetricItem {
   final String value;
 }
 
-enum _RankingTab { room, mine }
+enum _RankingTab { overall, mine }
